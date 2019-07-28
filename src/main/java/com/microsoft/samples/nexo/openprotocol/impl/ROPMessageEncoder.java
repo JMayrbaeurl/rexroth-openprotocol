@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageSerializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ShowOnDisplayMessageSerializer;
@@ -49,6 +50,9 @@ public class ROPMessageEncoder {
 
         this.messageSerializers.put(new Integer(ShowOnDisplayRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(new Integer(ShowOnDisplayRequestMessage.MESSAGEID)).add(new ShowOnDisplayMessageSerializer());
+
+        this.messageSerializers.put(new Integer(ProgramNumbersRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(ProgramNumbersRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
     }
 
     public Map<Integer, List<ROPMessageSerializer>> getMessageSerializers() {

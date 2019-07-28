@@ -7,10 +7,12 @@ import java.util.Map;
 
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply;
+import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.BatteryLevelMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAcceptedMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAckStartDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandErrorMessageDeserializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.ProgramNumbersMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageDeserializer;
 
 /**
@@ -69,5 +71,7 @@ public class ROPMessageDecoder {
         this.messageDeserializers.put(new Integer(BatteryLevelMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
         this.messageDeserializers.get(new Integer(BatteryLevelMessage.MESSAGEID)).add(new BatteryLevelMessageDeserializer());
 
+        this.messageDeserializers.put(new Integer(ProgramNumbersMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(new Integer(ProgramNumbersMessage.MESSAGEID)).add(new ProgramNumbersMessageDeserializer());
     }
 }

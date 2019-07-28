@@ -8,6 +8,7 @@ import com.microsoft.samples.nexo.openprotocol.Errors;
 import com.microsoft.samples.nexo.openprotocol.NexoCommException;
 import com.microsoft.samples.nexo.openprotocol.NexoDevice;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
 
 import org.slf4j.Logger;
@@ -26,12 +27,45 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
 
     @Override
     public Date getTime() throws NexoCommException {
+
+        
+
         return null;
     }
 
     @Override
+    public int[] getTighteningprogramNumbers() throws NexoCommException {
+
+        int[] result = null;
+
+        ROPRequestMessage request = this.messageFactory.createProgramNumbersRequestMessage();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof ProgramNumbersMessage) {
+                    result = ((ProgramNumbersMessage) reply).programNumbers();
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                }
+            } else {
+                log.debug("Read Tightening program numbers command didn't get a reply");
+            }
+
+        } catch (UnknownHostException e) {
+            log.error("Exception on reading tightening program numbers", e);
+            throw new NexoCommException("Exception on reading tightening program numbers", e);
+        } catch (IOException e) {
+            log.error("Exception on reading tightening program numbers", e);
+            throw new NexoCommException("Exception on reading tightening program numbers", e);
+        }
+
+        return result;
+    }
+
+    @Override
     public boolean showOnDisplay(String message) throws NexoCommException {
-        
+
         boolean result = false;
 
         ROPRequestMessage request = this.messageFactory.createShowOnDisplayRequestMessage(message);
@@ -39,7 +73,8 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
-                    result = ((CommandAcceptedMessage)reply).getAcceptedMessageID() == ShowOnDisplayRequestMessage.MESSAGEID;
+                    result = ((CommandAcceptedMessage) reply)
+                            .getAcceptedMessageID() == ShowOnDisplayRequestMessage.MESSAGEID;
                 } else {
                     if (!reply.isError())
                         throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
@@ -144,7 +179,6 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
     public void setMessageFactory(ROPMessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
-
 
 
 }

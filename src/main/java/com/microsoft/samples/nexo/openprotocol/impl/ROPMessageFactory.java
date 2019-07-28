@@ -7,6 +7,8 @@ import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev1;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev2;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev3;
+import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
 
 /**
@@ -39,6 +41,10 @@ public class ROPMessageFactory {
         return result;
     }
 
+    public ProgramNumbersRequestMessage createProgramNumbersRequestMessage() {
+        return new ProgramNumbersRequestMessage();
+    }
+
     public ROPMessage createMessageFor(int msgID, int rev) {
 
         ROPMessage result = null;
@@ -69,6 +75,9 @@ public class ROPMessageFactory {
                 break;
             case BatteryLevelMessage.MESSAGEID:
                 result = new BatteryLevelMessage();
+                break;
+            case ProgramNumbersMessage.MESSAGEID:
+                result = new ProgramNumbersMessage();
                 break;
             default:
                 break;
