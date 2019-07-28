@@ -1,5 +1,7 @@
 package com.microsoft.samples.nexo.openprotocol.impl;
 
+import com.microsoft.samples.nexo.openprotocol.Errors;
+
 /**
  * CommandErrorMessage
  */
@@ -31,4 +33,22 @@ public class CommandErrorMessage extends AbstractROPReplyMessage {
         this.errorNumber = errorNumber;
     }
 
+    @Override
+    public boolean isError() {
+        return true;
+    }
+
+    @Override
+    public boolean isOK() {
+        return false;
+    }
+
+    public String errorMessage() {
+        return Errors.message(this.errorNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "CommandErrorMessage [causingMessageID=" + causingMessageID + ", errorNumber=" + errorNumber + ": " + this.errorMessage() + "]";
+    }
 }

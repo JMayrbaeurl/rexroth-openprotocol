@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageSerializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.ShowOnDisplayMessageSerializer;
 
 /**
  * ROPMessageEncoder
@@ -37,11 +41,14 @@ public class ROPMessageEncoder {
 
     private void addStandardSerializers() {
 
-        this.messageSerializers.put(new Integer(1), new ArrayList<>());
-        this.messageSerializers.get(new Integer(1)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(new Integer(CommunicationStartMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(CommunicationStartMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
-        this.messageSerializers.put(new Integer(800), new ArrayList<>());
-        this.messageSerializers.get(new Integer(800)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(new Integer(BatteryLevelRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(BatteryLevelRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+
+        this.messageSerializers.put(new Integer(ShowOnDisplayRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(ShowOnDisplayRequestMessage.MESSAGEID)).add(new ShowOnDisplayMessageSerializer());
     }
 
     public Map<Integer, List<ROPMessageSerializer>> getMessageSerializers() {

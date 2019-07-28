@@ -37,4 +37,10 @@ public class CommunicationStartReplyRev1 extends CommunicationStartReply {
         this.controllerName = controllerName;
     }
 
+    @Override
+    public String toString() {
+        return "CommunicationStartReplyRev1 [cellID=" + cellID + ", channelID=" + channelID + ", controllerName="
+                + controllerName + "]";
+    }
+
 }

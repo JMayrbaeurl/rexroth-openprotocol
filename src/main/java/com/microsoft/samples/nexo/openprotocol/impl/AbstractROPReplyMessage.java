@@ -8,4 +8,14 @@ public abstract class AbstractROPReplyMessage extends AbstractROPMessage impleme
     protected AbstractROPReplyMessage(int mid, int rev) {
         super(mid, rev);
     }
+
+    @Override
+    public boolean isError() {
+        return false;
+    }
+
+    @Override
+    public boolean isOK() {
+        return true;
+    }
 }

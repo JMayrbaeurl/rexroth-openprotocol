@@ -14,4 +14,9 @@ public class BatteryLevelRequestMessage extends AbstractROPRequestMessage {
     public BatteryLevelRequestMessage() {
         super(MESSAGEID, STANDARD_REVISION);
     }
+
+    @Override
+    public String toString() {
+        return "BatteryLevelRequestMessage []";
+    }
 }

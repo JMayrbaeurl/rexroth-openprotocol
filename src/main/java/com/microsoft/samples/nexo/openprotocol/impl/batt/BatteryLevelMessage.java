@@ -25,4 +25,9 @@ public class BatteryLevelMessage extends AbstractROPReplyMessage {
         this.batteryLevel = batteryLevel;
     }
 
+    @Override
+    public String toString() {
+        return "BatteryLevelMessage [batteryLevel=" + batteryLevel + "]";
+    }
+
 }

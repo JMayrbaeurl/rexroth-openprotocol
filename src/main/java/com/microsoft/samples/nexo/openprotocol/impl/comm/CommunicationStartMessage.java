@@ -14,4 +14,9 @@ public class CommunicationStartMessage extends AbstractROPRequestMessage{
     public CommunicationStartMessage() {
         super(MESSAGEID, STANDARD_REVISION);
     }
+
+    @Override
+    public String toString() {
+        return "CommunicationStartMessage []";
+    }
 }

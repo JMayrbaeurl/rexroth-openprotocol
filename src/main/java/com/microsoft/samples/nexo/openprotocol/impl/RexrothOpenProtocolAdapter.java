@@ -43,9 +43,10 @@ public class RexrothOpenProtocolAdapter {
         if (!this.ready())
             this.open();
 
-        String messageString = this.messageEncoder.encodeMessage(requestMessage);
-        log.debug("Sending message to Nexo device using Open protocol: " + messageString);
+        log.info("Sending command to Nexo device using Open protocol: " + requestMessage.toString());
 
+        String messageString = this.messageEncoder.encodeMessage(requestMessage);
+        log.debug("Sending message string to Nexo device using Open protocol: " + messageString);
         this.outStream.write(messageString.getBytes(StandardCharsets.US_ASCII));
         this.outStream.write(0);
 
@@ -67,6 +68,12 @@ public class RexrothOpenProtocolAdapter {
 
             result = (ROPReplyMessage)this.messageFactory.createMessageFor(msgID, rev);
             result = (ROPReplyMessage)this.messageDecoder.decodeMessage(resultString, result);
+
+            log.info("Nexo device sent message: " + result.toString());
+
+            if (result.isError()) {
+                log.error("Nexo device returned error: " + result.toString());
+            }
         }
 
         return result;

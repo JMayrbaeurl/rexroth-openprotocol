@@ -5,5 +5,6 @@ package com.microsoft.samples.nexo.openprotocol.impl;
  */
 public interface ROPReplyMessage extends ROPMessage {
 
-    
+    public boolean isOK();
+    public boolean isError();
 }

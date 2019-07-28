@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.BatteryLevelMessageDeserializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAcceptedMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAckStartDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandErrorMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageDeserializer;
@@ -52,16 +55,19 @@ public class ROPMessageDecoder {
 
     private void addStandardDeserializers() {
         
-        this.messageDeserializers.put(new Integer(2), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(2)).add(new CommandAckStartDeserializer());
-        this.messageDeserializers.get(new Integer(2)).add(new CommandAckStartDeserializer());
-        this.messageDeserializers.get(new Integer(2)).add(new CommandAckStartDeserializer());
+        this.messageDeserializers.put(new Integer(CommunicationStartReply.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(new Integer(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
+        this.messageDeserializers.get(new Integer(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
+        this.messageDeserializers.get(new Integer(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
 
-        this.messageDeserializers.put(new Integer(4), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(4)).add(new CommandErrorMessageDeserializer());
+        this.messageDeserializers.put(new Integer(CommandErrorMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(new Integer(CommandErrorMessage.MESSAGEID)).add(new CommandErrorMessageDeserializer());
 
-        this.messageDeserializers.put(new Integer(801), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(801)).add(new BatteryLevelMessageDeserializer());
+        this.messageDeserializers.put(new Integer(CommandAcceptedMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(new Integer(CommandAcceptedMessage.MESSAGEID)).add(new CommandAcceptedMessageDeserializer());
+
+        this.messageDeserializers.put(new Integer(BatteryLevelMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(new Integer(BatteryLevelMessage.MESSAGEID)).add(new BatteryLevelMessageDeserializer());
 
     }
 }
