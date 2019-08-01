@@ -1,5 +1,7 @@
 package com.microsoft.samples.nexo.openprotocol;
 
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,6 +48,23 @@ public class SimpleTCPNexoDeviceImplTests {
         Assert.assertTrue(device.startCommunication());
         int[] numbers = device.getTighteningprogramNumbers();
         Assert.assertTrue(numbers.length > 0);
+    }
+    
+    @Test
+    public void testGetTime() {
+
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        Date currTime = device.getTime();
+        Assert.assertNotNull(currTime);
+    }
+
+    @Test
+    public void testGetToolData() {
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        NexoDeviceToolData data = device.getToolData();
+        Assert.assertNotNull(data);
     }
 
     private NexoDevice createDeviceClient() {

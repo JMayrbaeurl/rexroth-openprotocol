@@ -8,12 +8,16 @@ import java.util.Map;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.BatteryLevelMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAcceptedMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAckStartDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandErrorMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ProgramNumbersMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageDeserializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.TimeMessageDeserializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.ToolDataMessageDeserializer;
 
 /**
  * ROPMessageDecoder
@@ -73,5 +77,11 @@ public class ROPMessageDecoder {
 
         this.messageDeserializers.put(new Integer(ProgramNumbersMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
         this.messageDeserializers.get(new Integer(ProgramNumbersMessage.MESSAGEID)).add(new ProgramNumbersMessageDeserializer());
+
+        this.messageDeserializers.put(new Integer(TimeMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(new Integer(TimeMessage.MESSAGEID)).add(new TimeMessageDeserializer());
+
+        this.messageDeserializers.put(new Integer(ToolDataMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(new Integer(ToolDataMessage.MESSAGEID)).add(new ToolDataMessageDeserializer());
     }
 }

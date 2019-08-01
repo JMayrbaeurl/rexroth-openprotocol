@@ -9,6 +9,10 @@ import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev3;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.time.TimeRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
 
 /**
@@ -45,6 +49,14 @@ public class ROPMessageFactory {
         return new ProgramNumbersRequestMessage();
     }
 
+    public TimeRequestMessage createTimeRequestMessage() {
+        return new TimeRequestMessage();
+    }
+
+    public ToolDataRequestMessage createToolDataRequestMessage() {
+        return new ToolDataRequestMessage();
+    }
+
     public ROPMessage createMessageFor(int msgID, int rev) {
 
         ROPMessage result = null;
@@ -78,6 +90,12 @@ public class ROPMessageFactory {
                 break;
             case ProgramNumbersMessage.MESSAGEID:
                 result = new ProgramNumbersMessage();
+                break;
+            case TimeMessage.MESSAGEID:
+                result = new TimeMessage();
+                break;
+            case ToolDataMessage.MESSAGEID:
+                result = new ToolDataMessage();
                 break;
             default:
                 break;
