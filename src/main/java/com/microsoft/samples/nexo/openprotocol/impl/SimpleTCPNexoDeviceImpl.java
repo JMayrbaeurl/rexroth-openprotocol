@@ -1,6 +1,7 @@
 package com.microsoft.samples.nexo.openprotocol.impl;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import com.microsoft.samples.nexo.openprotocol.NexoCommException;
 import com.microsoft.samples.nexo.openprotocol.NexoDevice;
 import com.microsoft.samples.nexo.openprotocol.NexoDeviceToolData;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
@@ -209,7 +211,9 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             throw new NexoCommException("Could not start communication with Nexo device", e);
         } catch (IOException e) {
             log.error("Can not start communication with NexoDevice", e);
-            throw new NexoCommException("Could not start communication with Nexo device", e);
+
+            if (!(e instanceof ConnectException))
+                throw new NexoCommException("Could not start communication with Nexo device", e);
         }
 
         if (log.isInfoEnabled()) {
@@ -220,6 +224,67 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
         }
 
         return result;
+    }
+
+    @Override
+    public void stopCommunication() throws NexoCommException {
+
+        boolean result = false;
+
+        log.debug("Now send stop communication command to Nexo device");
+
+        ROPRequestMessage request = this.messageFactory.createStopCommunicationRequest();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                result = reply.isOK();
+            } else {
+                log.debug("Stop communication command didn't get a reply");
+            }
+
+        } catch (UnknownHostException e) {
+            log.error("Can not start communication with NexoDevice", e);
+            throw new NexoCommException("Could not start communication with Nexo device", e);
+        } catch (IOException e) {
+            log.error("Can not start communication with NexoDevice", e);
+        } finally {
+            if (this.protocolAdapter != null)
+            this.protocolAdapter.close();
+        }
+
+        if (log.isInfoEnabled()) {
+            if (result)
+                log.info("Successfully stopped communication with Nexo device");
+            else
+                log.info("Could not stop communication with Nexo device");
+        }
+    }
+
+    @Override
+    public void sendKeepAlive() throws NexoCommException {
+
+        log.debug("Now send keep alive command to Nexo device");
+
+        ROPRequestMessage request = this.messageFactory.createCommunicationKeepAliveMessage();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof CommunicationKeepAliveReply) 
+                    log.debug("Keep alive command received keep alive acknowledement");
+                else {
+                    log.error("Keep alive command didn't get correct reply: " + reply.toString());
+                }
+            } else {
+                log.error("Keep alive command didn't get a reply");
+            }
+
+        } catch (UnknownHostException e) {
+            log.error("Can not keep communication with NexoDevice alive", e);
+            throw new NexoCommException("Can not keep communication with NexoDevice alive", e);
+        } catch (IOException e) {
+            log.error("Can not keep communication with NexoDevice alive", e);
+            throw new NexoCommException("Can not keep communication with NexoDevice alive", e);
+        }
     }
 
     public RexrothOpenProtocolAdapter getProtocolAdapter() {

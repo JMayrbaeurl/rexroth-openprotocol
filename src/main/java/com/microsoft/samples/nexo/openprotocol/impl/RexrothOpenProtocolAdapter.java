@@ -63,15 +63,18 @@ public class RexrothOpenProtocolAdapter {
 
         if (resultString != null && resultString.length() > 0) {
 
+            log.debug("Received message from Nexo using Open protocol: " + resultString);
+
             int msgID = this.messageDecoder.readMessageIDfromReplyString(resultString);
             int rev = this.messageDecoder.readRevisionfromReplyString(resultString);
 
             result = (ROPReplyMessage)this.messageFactory.createMessageFor(msgID, rev);
             result = (ROPReplyMessage)this.messageDecoder.decodeMessage(resultString, result);
 
-            log.info("Nexo device sent message: " + result.toString());
+            if (result != null)
+                log.info("Nexo device sent message: " + result.toString());
 
-            if (result.isError()) {
+            if (result != null && result.isError()) {
                 log.error("Nexo device returned error: " + result.toString());
             }
         }
@@ -84,7 +87,10 @@ public class RexrothOpenProtocolAdapter {
         char[] buffer = new char[1024];
         int i = inStream.read(buffer, 0, 1024);
 
-        return i != -1 ? new String(buffer) : "";
+        log.debug("Read " + i + " bytes from Nexo device");
+
+        // Dont read the trailing null ASCII character
+        return i != -1 ? new String(buffer, 0, i-1) : "";
     }
 
     public boolean ready() {
@@ -93,6 +99,23 @@ public class RexrothOpenProtocolAdapter {
     }
 
     public void open() throws UnknownHostException, IOException {
+
+        log.debug("Opening socket connection to Nexo device on '" + this.ip + "' and port " + this.port);
+
+        if (this.outStream != null) {
+            try { this.outStream.close();} catch (IOException ignoreEx) {}
+            this.outStream = null;
+        }
+
+        if (this.inStream != null) {
+            try { this.inStream.close();} catch (IOException ignoreEx) {}
+            this.inStream = null;
+        }
+
+        if (this.clientSocket != null) {
+            try { this.clientSocket.close();} catch (IOException ignoreEx) {}
+            this.clientSocket = null;
+        }
 
         this.clientSocket = new Socket(this.ip, this.port);
         this.outStream = this.clientSocket.getOutputStream();

@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStopMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
@@ -46,6 +48,10 @@ public class ROPMessageEncoder {
 
         this.messageSerializers.put(new Integer(CommunicationStartMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(new Integer(CommunicationStartMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(new Integer(CommunicationStopMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(CommunicationStopMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(new Integer(CommunicationKeepAliveMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(CommunicationKeepAliveMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
         this.messageSerializers.put(new Integer(BatteryLevelRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(new Integer(BatteryLevelRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());

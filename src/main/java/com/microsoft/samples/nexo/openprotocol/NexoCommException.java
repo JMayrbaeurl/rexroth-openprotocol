@@ -1,5 +1,7 @@
 package com.microsoft.samples.nexo.openprotocol;
 
+import java.net.ConnectException;
+
 /**
  * NexoCommException
  */
@@ -26,5 +28,12 @@ public class NexoCommException extends RuntimeException {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    
+    public boolean isConnectException() {
+
+        boolean result = false;
+
+        result = this.getCause() != null && this.getCause() instanceof ConnectException;
+
+        return result;
+    }
 }

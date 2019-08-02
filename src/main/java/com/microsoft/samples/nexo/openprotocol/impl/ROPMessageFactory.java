@@ -2,11 +2,14 @@ package com.microsoft.samples.nexo.openprotocol.impl;
 
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev1;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev2;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev3;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStopMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
@@ -23,6 +26,16 @@ public class ROPMessageFactory {
     public CommunicationStartMessage createStartCommunicationRequest() {
 
         return new CommunicationStartMessage();
+    }
+
+    public CommunicationStopMessage createStopCommunicationRequest() {
+
+        return new CommunicationStopMessage();
+    }
+
+    public CommunicationKeepAliveMessage createCommunicationKeepAliveMessage() {
+
+        return new CommunicationKeepAliveMessage();
     }
 
     public BatteryLevelRequestMessage createBatteryLevelRequestMessage() {
@@ -78,6 +91,9 @@ public class ROPMessageFactory {
                             break;
                     }
                 }
+                break;
+            case CommunicationKeepAliveMessage.MESSAGEID:
+                result = new CommunicationKeepAliveReply();
                 break;
             case CommandErrorMessage.MESSAGEID:
                 result = new CommandErrorMessage();

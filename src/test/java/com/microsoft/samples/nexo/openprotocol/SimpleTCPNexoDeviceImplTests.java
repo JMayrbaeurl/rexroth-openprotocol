@@ -15,6 +15,19 @@ public class SimpleTCPNexoDeviceImplTests {
 
         NexoDevice device = this.createDeviceClient();
         Assert.assertTrue(device.startCommunication());
+        device.stopCommunication();
+    }
+
+    @Test
+    public void testMultipleCommunications() {
+
+        NexoDevice device1 = this.createDeviceClient();
+        NexoDevice device2 = this.createDeviceClient();
+
+        Assert.assertTrue(device1.startCommunication());
+        device1.stopCommunication();
+        Assert.assertTrue(device2.startCommunication());
+        device2.stopCommunication();
     }
 
     @Test
@@ -22,8 +35,18 @@ public class SimpleTCPNexoDeviceImplTests {
 
         NexoDevice device = this.createDeviceClient();
 
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < 3; i++) 
             Assert.assertTrue(device.startCommunication());
+    }
+
+    @Test
+    public void testKeepAlive() {
+
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+
+        device.sendKeepAlive();
+        device.stopCommunication();
     }
 
     @Test
@@ -33,6 +56,20 @@ public class SimpleTCPNexoDeviceImplTests {
         Assert.assertTrue(device.startCommunication());
         int level = device.getBatteryLevel();
         Assert.assertTrue(level > 0 && level <= 100);
+    }
+
+    @Test
+    public void testGetBatteryLevelMultipleTimes() {
+
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+
+        for(int i = 0; i < 3; i++) {
+            int level = device.getBatteryLevel();
+            Assert.assertTrue(level > 0 && level <= 100);
+        }
+
+        device.stopCommunication();
     }
 
     @Test

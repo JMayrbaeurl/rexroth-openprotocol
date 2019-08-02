@@ -39,9 +39,9 @@ public class CommandAckStartDeserializer extends ROPMessageDeserializer {
 
         if (message instanceof CommunicationStartReplyRev1) {
             CommunicationStartReplyRev1 reply = (CommunicationStartReplyRev1)message;
-            reply.setCellID(Integer.parseInt(str.substring(0, 4)));
-            reply.setChannelID(Integer.parseInt(str.substring(4, 6)));
-            reply.setControllerName(str.substring(6));
+            reply.setCellID(Integer.parseInt(str.substring(2, 6)));
+            reply.setChannelID(Integer.parseInt(str.substring(8, 10)));
+            reply.setControllerName(str.substring(12, 37));
         } else if (message instanceof CommunicationStartReplyRev2) {
             //CommunicationStartReplyRev2 reply = (CommunicationStartReplyRev2)message;
             throw new IllegalStateException("Revision 2 of Communication Start Acknowledge commands not supported yet");

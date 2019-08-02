@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
@@ -19,10 +21,15 @@ import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.TimeMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ToolDataMessageDeserializer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * ROPMessageDecoder
  */
 public class ROPMessageDecoder {
+
+    private static final Logger log = LoggerFactory.getLogger(ROPMessageDecoder.class);
 
     private Map<Integer, List<ROPMessageDeserializer>> messageDeserializers = new HashMap<Integer, List<ROPMessageDeserializer>>();
 
@@ -37,6 +44,7 @@ public class ROPMessageDecoder {
         if(fromString == null || fromString.length() == 0)
             throw new IllegalArgumentException("Parameter fromString must not be null");
 
+        if (message != null) {
             Integer msgID = new Integer(message.messageID());
 
             if (this.messageDeserializers.containsKey(msgID)) {
@@ -45,6 +53,8 @@ public class ROPMessageDecoder {
                 if (deSerializers.size() >= message.revision())
                     result = deSerializers.get(message.revision()-1).fromString(fromString, message);
             }
+        } else
+            log.warn("decodeMessage from '" + fromString + "' called for null message object. Check message factory setup");
 
         return result;
     }
@@ -65,6 +75,9 @@ public class ROPMessageDecoder {
         this.messageDeserializers.get(new Integer(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
         this.messageDeserializers.get(new Integer(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
         this.messageDeserializers.get(new Integer(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
+
+        this.messageDeserializers.put(new Integer(CommunicationKeepAliveReply.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(new Integer(CommunicationKeepAliveReply.MESSAGEID)).add(new ROPMessageDeserializer());
 
         this.messageDeserializers.put(new Integer(CommandErrorMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
         this.messageDeserializers.get(new Integer(CommandErrorMessage.MESSAGEID)).add(new CommandErrorMessageDeserializer());
