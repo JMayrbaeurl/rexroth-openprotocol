@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
-import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;

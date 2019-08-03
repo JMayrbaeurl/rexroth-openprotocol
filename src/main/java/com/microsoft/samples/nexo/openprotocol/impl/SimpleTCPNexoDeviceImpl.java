@@ -210,10 +210,12 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             log.error("Can not start communication with NexoDevice", e);
             throw new NexoCommException("Could not start communication with Nexo device", e);
         } catch (IOException e) {
-            log.error("Can not start communication with NexoDevice", e);
-
-            if (!(e instanceof ConnectException))
+            if (!(e instanceof ConnectException)) {
+                log.error("Can not start communication with NexoDevice", e);
                 throw new NexoCommException("Could not start communication with Nexo device", e);
+            } else {
+                log.warn("Can not start communication with NexoDevice. Connection timed out");
+            }
         }
 
         if (log.isInfoEnabled()) {
