@@ -104,6 +104,21 @@ public class SimpleTCPNexoDeviceImplTests {
         Assert.assertNotNull(data);
     }
 
+    @Test 
+    public void testSetCurrentTime() {
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        device.setTime(new Date());
+    }
+
+    @Test
+    public void testOKCounters() {
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        int[] counters = device.getOKCounters();
+        Assert.assertNotNull(counters);
+    }
+
     private NexoDevice createDeviceClient() {
         
         return NexoDeviceClientFactory.createDefaultNexoDeviceClient("192.168.1.22", 4545);

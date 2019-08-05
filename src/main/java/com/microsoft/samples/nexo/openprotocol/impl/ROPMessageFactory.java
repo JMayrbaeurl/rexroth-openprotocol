@@ -1,5 +1,7 @@
 package com.microsoft.samples.nexo.openprotocol.impl;
 
+import java.util.Date;
+
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveMessage;
@@ -10,10 +12,13 @@ import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev2;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev3;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStopMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
@@ -62,8 +67,16 @@ public class ROPMessageFactory {
         return new ProgramNumbersRequestMessage();
     }
 
+    public OKCounterRequestMessage createOKCountersRequestMessage() {
+        return new OKCounterRequestMessage();
+    }
+
     public TimeRequestMessage createTimeRequestMessage() {
         return new TimeRequestMessage();
+    }
+
+    public TimeSetMessage createTimeSetMessage(Date newTime) {
+        return new TimeSetMessage(newTime);
     }
 
     public ToolDataRequestMessage createToolDataRequestMessage() {
@@ -112,6 +125,9 @@ public class ROPMessageFactory {
                 break;
             case ToolDataMessage.MESSAGEID:
                 result = new ToolDataMessage();
+                break;
+            case OKCounterReplyMessage.MESSAGEID:
+                result = new OKCounterReplyMessage();
                 break;
             default:
                 break;

@@ -2,7 +2,6 @@ package com.microsoft.samples.nexo.openprotocol.impl;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.util.Date;
 
 import com.microsoft.samples.nexo.openprotocol.Errors;
@@ -11,8 +10,10 @@ import com.microsoft.samples.nexo.openprotocol.NexoDevice;
 import com.microsoft.samples.nexo.openprotocol.NexoDeviceToolData;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
+import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
 
@@ -30,7 +31,6 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
 
     private ROPMessageFactory messageFactory;
 
-    
     @Override
     public NexoDeviceToolData getToolData() throws NexoCommException {
 
@@ -49,10 +49,6 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             } else {
                 log.debug("Getting tool data of Tightening device didn't get a reply");
             }
-
-        } catch (UnknownHostException e) {
-            log.error("Exception on getting tool data from tightening device", e);
-            throw new NexoCommException("Exception on getting tool data from tightening device", e);
         } catch (IOException e) {
             log.error("Exception on getting tool data from tightening device", e);
             throw new NexoCommException("Exception on getting tool data from tightening device", e);
@@ -81,16 +77,43 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             } else {
                 log.debug("Getting time on Tightening device didn't get a reply");
             }
-
-        } catch (UnknownHostException e) {
-            log.error("Exception on getting current time from tightening device", e);
-            throw new NexoCommException("Exception on getting current time from tightening device", e);
         } catch (IOException e) {
             log.error("Exception on getting current time from tightening device", e);
             throw new NexoCommException("Exception on getting current time from tightening device", e);
         }
 
         return result;
+    }
+
+    @Override
+    public void setTime(final Date newTime) throws NexoCommException {
+
+        if (newTime == null)
+            throw new IllegalArgumentException("Parameter for new time of Nexo device must not be null");
+
+        ROPRequestMessage request = this.messageFactory.createTimeSetMessage(newTime);
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof CommandAcceptedMessage) {
+                    if(((CommandAcceptedMessage) reply).getAcceptedMessageID() != TimeSetMessage.MESSAGEID) {
+                        throw new NexoCommException("Wrong accept message for command " 
+                            + ((CommandAcceptedMessage) reply).getAcceptedMessageID() + ". Expected " + TimeSetMessage.MESSAGEID);
+                    }
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                    else
+                        throw new NexoCommException("Error message returned from Nexo: " + reply);
+                }
+            } else {
+                log.debug("Setting time on Tightening device didn't get a reply");
+            }
+
+        } catch (IOException e) {
+            log.error("Exception on setting time on tightening device", e);
+            throw new NexoCommException("Exception on setting time on tightening device", e);
+        }
     }
 
     @Override
@@ -111,13 +134,35 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             } else {
                 log.debug("Read Tightening program numbers command didn't get a reply");
             }
-
-        } catch (UnknownHostException e) {
-            log.error("Exception on reading tightening program numbers", e);
-            throw new NexoCommException("Exception on reading tightening program numbers", e);
         } catch (IOException e) {
             log.error("Exception on reading tightening program numbers", e);
             throw new NexoCommException("Exception on reading tightening program numbers", e);
+        }
+
+        return result;
+    }
+
+    @Override
+    public int[] getOKCounters() throws NexoCommException {
+
+        int[] result = null;
+
+        ROPRequestMessage request = this.messageFactory.createOKCountersRequestMessage();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof OKCounterReplyMessage) {
+                    result = ((OKCounterReplyMessage) reply).toIntArray();
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                }
+            } else {
+                log.debug("Read OK Counters command didn't get a reply");
+            }
+        } catch (IOException e) {
+            log.error("Exception on reading OK Counters", e);
+            throw new NexoCommException("Exception on reading OK Counters", e);
         }
 
         return result;
@@ -142,10 +187,6 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             } else {
                 log.debug("Show on display command didn't get a reply");
             }
-
-        } catch (UnknownHostException e) {
-            log.error("Exception on showing string on Nexo device display", e);
-            throw new NexoCommException("Exception on showing string on Nexo device display", e);
         } catch (IOException e) {
             log.error("Exception on showing string on Nexo device display", e);
             throw new NexoCommException("Exception on showing string on Nexo device display", e);
@@ -172,10 +213,6 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             } else {
                 log.debug("Get Battery level command didn't get a reply");
             }
-
-        } catch (UnknownHostException e) {
-            log.error("Exception on getting battery level from Nexo device", e);
-            throw new NexoCommException("Exception on getting battery level from Nexo device", e);
         } catch (IOException e) {
             log.error("Exception on getting battery level from Nexo device", e);
             throw new NexoCommException("Exception on getting battery level from Nexo device", e);
@@ -205,10 +242,6 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             } else {
                 log.debug("Start communication command didn't get a reply");
             }
-
-        } catch (UnknownHostException e) {
-            log.error("Can not start communication with NexoDevice", e);
-            throw new NexoCommException("Could not start communication with Nexo device", e);
         } catch (IOException e) {
             if (!(e instanceof ConnectException)) {
                 log.error("Can not start communication with NexoDevice", e);
@@ -243,15 +276,11 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             } else {
                 log.debug("Stop communication command didn't get a reply");
             }
-
-        } catch (UnknownHostException e) {
-            log.error("Can not start communication with NexoDevice", e);
-            throw new NexoCommException("Could not start communication with Nexo device", e);
         } catch (IOException e) {
             log.error("Can not start communication with NexoDevice", e);
         } finally {
             if (this.protocolAdapter != null)
-            this.protocolAdapter.close();
+                this.protocolAdapter.close();
         }
 
         if (log.isInfoEnabled()) {
@@ -271,7 +300,7 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
         try {
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
-                if (reply instanceof CommunicationKeepAliveReply) 
+                if (reply instanceof CommunicationKeepAliveReply)
                     log.debug("Keep alive command received keep alive acknowledement");
                 else {
                     log.error("Keep alive command didn't get correct reply: " + reply.toString());
@@ -279,10 +308,6 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             } else {
                 log.error("Keep alive command didn't get a reply");
             }
-
-        } catch (UnknownHostException e) {
-            log.error("Can not keep communication with NexoDevice alive", e);
-            throw new NexoCommException("Can not keep communication with NexoDevice alive", e);
         } catch (IOException e) {
             log.error("Can not keep communication with NexoDevice alive", e);
             throw new NexoCommException("Can not keep communication with NexoDevice alive", e);

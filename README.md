@@ -58,10 +58,10 @@ via the client.
 | MID  0076 | System error status | n.a.
 | MID  0077 | System error status acknowledgement | n.a.
 | MID  0078 | Acknowledge system error in tightening controller | n.a.
-| MID  0080 | Time on the tightening controller request | n.a.
-| MID 0081 | Upload time | n.a.
-| MID 0082 | Set the time in the tightening controller | n.a.
-| MID 0111 | Message on the graphical display of the nutrunner | n.a.
+| MID  0080 | Time on the tightening controller request | 1.0.0
+| MID 0081 | Upload time | 1.0.0
+| MID 0082 | Set the time in the tightening controller | 1.0.0
+| MID 0111 | Message on the graphical display of the nutrunner | 1.0.0
 | MID 01272) | Aborts a job | n.a.
 | MID 0400 | Activate automatic/manual mode | n.a.
 | MID 0401 | Upload automatic/manual mode | n.a.

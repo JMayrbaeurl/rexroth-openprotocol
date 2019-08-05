@@ -15,9 +15,11 @@ public interface NexoDevice {
 
     public int getBatteryLevel() throws NexoCommException;
     public Date getTime() throws NexoCommException;
+    public void setTime(Date newTime) throws NexoCommException;
     public boolean showOnDisplay(String message) throws NexoCommException;
 
     public int[] getTighteningprogramNumbers() throws NexoCommException;
+    public int[] getOKCounters() throws NexoCommException;
 
     public NexoDeviceToolData getToolData() throws NexoCommException;
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply;
+import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
@@ -15,6 +16,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.wire.BatteryLevelMessageDese
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAcceptedMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAckStartDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandErrorMessageDeserializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.OKCounterReplyMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ProgramNumbersMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.TimeMessageDeserializer;
@@ -95,5 +97,8 @@ public class ROPMessageDecoder {
 
         this.messageDeserializers.put(new Integer(ToolDataMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
         this.messageDeserializers.get(new Integer(ToolDataMessage.MESSAGEID)).add(new ToolDataMessageDeserializer());
+
+        this.messageDeserializers.put(new Integer(OKCounterReplyMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(new Integer(OKCounterReplyMessage.MESSAGEID)).add(new OKCounterReplyMessageDeserializer());
     }
 }

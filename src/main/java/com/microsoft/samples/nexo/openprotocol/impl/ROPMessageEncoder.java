@@ -9,12 +9,15 @@ import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelRequestMess
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStopMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageSerializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ShowOnDisplayMessageSerializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.TimeSetMessageSerializer;
 
 /**
  * ROPMessageEncoder
@@ -64,9 +67,14 @@ public class ROPMessageEncoder {
 
         this.messageSerializers.put(new Integer(TimeRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(new Integer(TimeRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(new Integer(TimeSetMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(TimeSetMessage.MESSAGEID)).add(new TimeSetMessageSerializer());
 
         this.messageSerializers.put(new Integer(ToolDataRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(new Integer(ToolDataRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+
+        this.messageSerializers.put(new Integer(OKCounterRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(OKCounterRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
     }
 
     public Map<Integer, List<ROPMessageSerializer>> getMessageSerializers() {

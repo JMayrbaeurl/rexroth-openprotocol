@@ -16,6 +16,8 @@ public class TimeMessageDeserializer extends ROPMessageDeserializer {
 
     private static final Logger logger = LoggerFactory.getLogger(TimeMessageDeserializer.class);
 
+    private String datePattern = "yyyy-MM-dd:HH:mm:ss";
+
     @Override
     public int datalength(int revision) {
         return 19;
@@ -33,7 +35,7 @@ public class TimeMessageDeserializer extends ROPMessageDeserializer {
         if (message instanceof TimeMessage) {
             TimeMessage reply = (TimeMessage)message;
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat(this.datePattern);
             try {
                 reply.setDeviceTime(formatter.parse(str));
             } catch (ParseException e) {
