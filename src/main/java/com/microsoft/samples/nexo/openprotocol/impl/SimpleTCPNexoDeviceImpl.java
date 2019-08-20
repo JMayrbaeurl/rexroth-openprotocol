@@ -8,6 +8,7 @@ import com.microsoft.samples.nexo.openprotocol.Errors;
 import com.microsoft.samples.nexo.openprotocol.NexoCommException;
 import com.microsoft.samples.nexo.openprotocol.NexoDevice;
 import com.microsoft.samples.nexo.openprotocol.NexoDeviceToolData;
+import com.microsoft.samples.nexo.openprotocol.Subscriber;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
@@ -96,9 +97,10 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
-                    if(((CommandAcceptedMessage) reply).getAcceptedMessageID() != TimeSetMessage.MESSAGEID) {
-                        throw new NexoCommException("Wrong accept message for command " 
-                            + ((CommandAcceptedMessage) reply).getAcceptedMessageID() + ". Expected " + TimeSetMessage.MESSAGEID);
+                    if (((CommandAcceptedMessage) reply).getAcceptedMessageID() != TimeSetMessage.MESSAGEID) {
+                        throw new NexoCommException("Wrong accept message for command "
+                                + ((CommandAcceptedMessage) reply).getAcceptedMessageID() + ". Expected "
+                                + TimeSetMessage.MESSAGEID);
                     }
                 } else {
                     if (!reply.isError())
@@ -171,9 +173,20 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
     @Override
     public boolean showOnDisplay(String message) throws NexoCommException {
 
+        return this.doShowOnDisplay(message, -1);
+    }
+
+    @Override
+    public boolean showOnDisplay(String message, int duration) throws NexoCommException {
+        
+        return this.doShowOnDisplay(message, duration);
+    }
+
+    protected boolean doShowOnDisplay(String message, int duration) throws NexoCommException {
+
         boolean result = false;
 
-        ROPRequestMessage request = this.messageFactory.createShowOnDisplayRequestMessage(message);
+        ROPRequestMessage request = this.messageFactory.createShowOnDisplayRequestMessage(message, duration);
         try {
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
@@ -330,6 +343,14 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
         this.messageFactory = messageFactory;
     }
 
+    @Override
+    public Subscriber subscribeToTighteningResults(ResultsHandler handler) {
+
+        TighteningResultsSubscriber result = new TighteningResultsSubscriber(100, this.protocolAdapter,
+                this.messageFactory, handler);
+
+        return result;
+    }
 
 
 }

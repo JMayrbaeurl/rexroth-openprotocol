@@ -45,15 +45,32 @@ public class RexrothOpenProtocolAdapter {
 
         log.info("Sending command to Nexo device using Open protocol: " + requestMessage.toString());
 
-        String messageString = this.messageEncoder.encodeMessage(requestMessage);
+        this.sendMessageAsString(this.messageEncoder.encodeMessage(requestMessage));
+
+        return this.readReplyMessage(requestMessage);
+    }
+
+    public void sendMessage(ROPMessage message) throws IOException {
+
+        if (message == null)
+            throw new IllegalArgumentException("Value for parameter 'message' must not be NULL");
+
+        if (!this.ready())
+            this.open();
+
+        log.info("Sending command to Nexo device using Open protocol: " + message.toString());
+
+        this.sendMessageAsString(this.messageEncoder.encodeMessage(message));
+    }
+
+    private void sendMessageAsString(String messageString) throws IOException {
+
         log.debug("Sending message string to Nexo device using Open protocol: " + messageString);
         this.outStream.write(messageString.getBytes(StandardCharsets.US_ASCII));
         this.outStream.write(0);
-
-        return this.createReplyMessage(requestMessage);
     }
 
-    protected ROPReplyMessage createReplyMessage(ROPRequestMessage requestMessage) throws IOException {
+    protected ROPReplyMessage readReplyMessage(ROPRequestMessage requestMessage) throws IOException {
 
         if (requestMessage == null)
             throw new IllegalArgumentException("Value for parameter 'requestMessage' must not be NULL");
@@ -77,6 +94,28 @@ public class RexrothOpenProtocolAdapter {
             if (result != null && result.isError()) {
                 log.error("Nexo device returned error: " + result.toString());
             }
+        }
+
+        return result;
+    }
+
+    public ROPMessage readNextMessage() throws IOException {
+
+        String resultString = this.readNexoResultString();
+        ROPMessage result = null;
+
+        if (resultString != null && resultString.length() > 0) {
+
+            log.debug("Read message from Nexo using Open protocol: " + resultString);
+
+            int msgID = this.messageDecoder.readMessageIDfromReplyString(resultString);
+            int rev = this.messageDecoder.readRevisionfromReplyString(resultString);
+
+            result = this.messageFactory.createMessageFor(msgID, rev);
+            result = this.messageDecoder.decodeMessage(resultString, result);
+
+            if (result != null)
+                log.info("Nexo device sent message: " + result.toString());
         }
 
         return result;

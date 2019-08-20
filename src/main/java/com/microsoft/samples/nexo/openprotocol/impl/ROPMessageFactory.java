@@ -16,6 +16,11 @@ import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.AbstractLastResultsMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsAcknMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsMessageRev1;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubStopMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
@@ -48,13 +53,19 @@ public class ROPMessageFactory {
         return new BatteryLevelRequestMessage();
     }
 
-    public ShowOnDisplayRequestMessage createShowOnDisplayRequestMessage(String message) {
+    public ShowOnDisplayRequestMessage createShowOnDisplayRequestMessage(String message, int duration) {
 
         if (message == null)
             throw new IllegalArgumentException("Parameter message must not be null");
 
         ShowOnDisplayRequestMessage result = new ShowOnDisplayRequestMessage();
-        result.setNeedsOKToDismiss(true);
+        if (duration >= 0)
+            result.setDisplayDurationInSeconds(duration);
+        else {
+            result.setNeedsOKToDismiss(true);
+            // This seems to be a bug in the Nexo firmware. Must be at least one second to display something
+            result.setDisplayDurationInSeconds(1);
+        }
         String[] onlines = message.split("(?<=\\G.{15})");
         int numberoflines = onlines.length > 4 ? 4 : onlines.length;
         for(int i = 0; i < numberoflines; i++)
@@ -81,6 +92,18 @@ public class ROPMessageFactory {
 
     public ToolDataRequestMessage createToolDataRequestMessage() {
         return new ToolDataRequestMessage();
+    }
+
+    public LastResultsSubRequestMessage createLastResultsSubRequestMessage() {
+        return new LastResultsSubRequestMessage();
+    }
+
+    public LastResultsAcknMessage createLastResultsAcknMessage() {
+        return new LastResultsAcknMessage();
+    }
+
+    public LastResultsSubStopMessage createLastResultsSubStopMessage() {
+        return new LastResultsSubStopMessage();
     }
 
     public ROPMessage createMessageFor(int msgID, int rev) {
@@ -128,6 +151,9 @@ public class ROPMessageFactory {
                 break;
             case OKCounterReplyMessage.MESSAGEID:
                 result = new OKCounterReplyMessage();
+                break;
+            case AbstractLastResultsMessage.MESSAGEID:
+                result = new LastResultsMessageRev1();
                 break;
             default:
                 break;

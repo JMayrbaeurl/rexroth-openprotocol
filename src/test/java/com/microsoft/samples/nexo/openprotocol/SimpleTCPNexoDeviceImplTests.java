@@ -80,6 +80,13 @@ public class SimpleTCPNexoDeviceImplTests {
     }
 
     @Test
+    public void testShowOnDisplay10Seconds() {
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        Assert.assertTrue(device.showOnDisplay("Das ist ein Test", 10));
+    }
+
+    @Test
     public void testReadProgramnumbers() {
         NexoDevice device = this.createDeviceClient();
         Assert.assertTrue(device.startCommunication());

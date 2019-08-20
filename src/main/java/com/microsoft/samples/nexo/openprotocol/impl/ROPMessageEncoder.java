@@ -11,6 +11,9 @@ import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartMessa
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStopMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsAcknMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubStopMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
@@ -75,6 +78,13 @@ public class ROPMessageEncoder {
 
         this.messageSerializers.put(new Integer(OKCounterRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(new Integer(OKCounterRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+
+        this.messageSerializers.put(new Integer(LastResultsSubRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(LastResultsSubRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(new Integer(LastResultsAcknMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(LastResultsAcknMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(new Integer(LastResultsSubStopMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(new Integer(LastResultsSubStopMessage.MESSAGEID)).add(new ROPMessageSerializer());
     }
 
     public Map<Integer, List<ROPMessageSerializer>> getMessageSerializers() {
