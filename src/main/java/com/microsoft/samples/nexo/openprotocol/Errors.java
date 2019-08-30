@@ -24,8 +24,8 @@ public class Errors {
     public static final String message(int errorNumber) {
 
         if (errorNumber > 0 && errorNumber < 100) {
-            if (Errors.errorMap.containsKey(new Integer(errorNumber)))
-                return Errors.errorMap.get(new Integer(errorNumber));
+            if (Errors.errorMap.containsKey(Integer.valueOf(errorNumber)))
+                return Errors.errorMap.get(Integer.valueOf(errorNumber));
             else
                 return "Unknown error with number " + errorNumber;
         } else 
@@ -36,7 +36,7 @@ public class Errors {
 
     static {
         Errors.errorMap = new HashMap<Integer, String>();
-        Errors.errorMap.put(new Integer(INVALIDDATA), INVALIDDATA_MSG);
-        Errors.errorMap.put(new Integer(CLIENTALREADYCONNECTED), CLIENTALREADYCONNECTED_MSG);
+        Errors.errorMap.put(Integer.valueOf(INVALIDDATA), INVALIDDATA_MSG);
+        Errors.errorMap.put(Integer.valueOf(CLIENTALREADYCONNECTED), CLIENTALREADYCONNECTED_MSG);
     }
 }

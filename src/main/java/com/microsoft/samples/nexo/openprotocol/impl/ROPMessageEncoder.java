@@ -38,7 +38,7 @@ public class ROPMessageEncoder {
     public String encodeMessage(ROPMessage message) {
 
         String result = "";
-        Integer msgID = new Integer(message.messageID());
+        Integer msgID = Integer.valueOf(message.messageID());
 
         if (this.messageSerializers.containsKey(msgID)) {
 
@@ -52,39 +52,39 @@ public class ROPMessageEncoder {
 
     private void addStandardSerializers() {
 
-        this.messageSerializers.put(new Integer(CommunicationStartMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(CommunicationStartMessage.MESSAGEID)).add(new ROPMessageSerializer());
-        this.messageSerializers.put(new Integer(CommunicationStopMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(CommunicationStopMessage.MESSAGEID)).add(new ROPMessageSerializer());
-        this.messageSerializers.put(new Integer(CommunicationKeepAliveMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(CommunicationKeepAliveMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(CommunicationStartMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(CommunicationStartMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(CommunicationStopMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(CommunicationStopMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(CommunicationKeepAliveMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(CommunicationKeepAliveMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
-        this.messageSerializers.put(new Integer(BatteryLevelRequestMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(BatteryLevelRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(BatteryLevelRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(BatteryLevelRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
-        this.messageSerializers.put(new Integer(ShowOnDisplayRequestMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(ShowOnDisplayRequestMessage.MESSAGEID)).add(new ShowOnDisplayMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(ShowOnDisplayRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(ShowOnDisplayRequestMessage.MESSAGEID)).add(new ShowOnDisplayMessageSerializer());
 
-        this.messageSerializers.put(new Integer(ProgramNumbersRequestMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(ProgramNumbersRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(ProgramNumbersRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(ProgramNumbersRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
-        this.messageSerializers.put(new Integer(TimeRequestMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(TimeRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
-        this.messageSerializers.put(new Integer(TimeSetMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(TimeSetMessage.MESSAGEID)).add(new TimeSetMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(TimeRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(TimeRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(TimeSetMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(TimeSetMessage.MESSAGEID)).add(new TimeSetMessageSerializer());
 
-        this.messageSerializers.put(new Integer(ToolDataRequestMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(ToolDataRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(ToolDataRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(ToolDataRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
-        this.messageSerializers.put(new Integer(OKCounterRequestMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(OKCounterRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(OKCounterRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(OKCounterRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
-        this.messageSerializers.put(new Integer(LastResultsSubRequestMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(LastResultsSubRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
-        this.messageSerializers.put(new Integer(LastResultsAcknMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(LastResultsAcknMessage.MESSAGEID)).add(new ROPMessageSerializer());
-        this.messageSerializers.put(new Integer(LastResultsSubStopMessage.MESSAGEID), new ArrayList<>());
-        this.messageSerializers.get(new Integer(LastResultsSubStopMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(LastResultsSubRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(LastResultsSubRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(LastResultsAcknMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(LastResultsAcknMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(LastResultsSubStopMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(LastResultsSubStopMessage.MESSAGEID)).add(new ROPMessageSerializer());
     }
 
     public Map<Integer, List<ROPMessageSerializer>> getMessageSerializers() {

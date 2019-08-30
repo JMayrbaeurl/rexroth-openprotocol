@@ -23,7 +23,7 @@ public class OKCounterReplyMessageDeserializer extends ROPMessageDeserializer {
             int numCounters = Integer.parseInt(str.substring(0, 2));
             if (numCounters < 0) numCounters = 0;
             for(int i = 0; i < numCounters; i++) {
-                reply.getCounters().add(new Integer(Integer.parseInt(str.substring(2+(i*2), 4+(i*2)))));
+                reply.getCounters().add(Integer.valueOf(Integer.parseInt(str.substring(2+(i*2), 4+(i*2)))));
             }
         }
 

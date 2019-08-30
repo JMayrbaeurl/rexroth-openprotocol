@@ -48,7 +48,7 @@ public class ROPMessageDecoder {
             throw new IllegalArgumentException("Parameter fromString must not be null");
 
         if (message != null) {
-            Integer msgID = new Integer(message.messageID());
+            Integer msgID = Integer.valueOf(message.messageID());
 
             if (this.messageDeserializers.containsKey(msgID)) {
     
@@ -74,36 +74,36 @@ public class ROPMessageDecoder {
 
     private void addStandardDeserializers() {
         
-        this.messageDeserializers.put(new Integer(CommunicationStartReply.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
-        this.messageDeserializers.get(new Integer(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
-        this.messageDeserializers.get(new Integer(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
+        this.messageDeserializers.put(Integer.valueOf(CommunicationStartReply.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
+        this.messageDeserializers.get(Integer.valueOf(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
+        this.messageDeserializers.get(Integer.valueOf(CommunicationStartReply.MESSAGEID)).add(new CommandAckStartDeserializer());
 
-        this.messageDeserializers.put(new Integer(CommunicationKeepAliveReply.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(CommunicationKeepAliveReply.MESSAGEID)).add(new ROPMessageDeserializer());
+        this.messageDeserializers.put(Integer.valueOf(CommunicationKeepAliveReply.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(CommunicationKeepAliveReply.MESSAGEID)).add(new ROPMessageDeserializer());
 
-        this.messageDeserializers.put(new Integer(CommandErrorMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(CommandErrorMessage.MESSAGEID)).add(new CommandErrorMessageDeserializer());
+        this.messageDeserializers.put(Integer.valueOf(CommandErrorMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(CommandErrorMessage.MESSAGEID)).add(new CommandErrorMessageDeserializer());
 
-        this.messageDeserializers.put(new Integer(CommandAcceptedMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(CommandAcceptedMessage.MESSAGEID)).add(new CommandAcceptedMessageDeserializer());
+        this.messageDeserializers.put(Integer.valueOf(CommandAcceptedMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(CommandAcceptedMessage.MESSAGEID)).add(new CommandAcceptedMessageDeserializer());
 
-        this.messageDeserializers.put(new Integer(BatteryLevelMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(BatteryLevelMessage.MESSAGEID)).add(new BatteryLevelMessageDeserializer());
+        this.messageDeserializers.put(Integer.valueOf(BatteryLevelMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(BatteryLevelMessage.MESSAGEID)).add(new BatteryLevelMessageDeserializer());
 
-        this.messageDeserializers.put(new Integer(ProgramNumbersMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(ProgramNumbersMessage.MESSAGEID)).add(new ProgramNumbersMessageDeserializer());
+        this.messageDeserializers.put(Integer.valueOf(ProgramNumbersMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(ProgramNumbersMessage.MESSAGEID)).add(new ProgramNumbersMessageDeserializer());
 
-        this.messageDeserializers.put(new Integer(TimeMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(TimeMessage.MESSAGEID)).add(new TimeMessageDeserializer());
+        this.messageDeserializers.put(Integer.valueOf(TimeMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(TimeMessage.MESSAGEID)).add(new TimeMessageDeserializer());
 
-        this.messageDeserializers.put(new Integer(ToolDataMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(ToolDataMessage.MESSAGEID)).add(new ToolDataMessageDeserializer());
+        this.messageDeserializers.put(Integer.valueOf(ToolDataMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(ToolDataMessage.MESSAGEID)).add(new ToolDataMessageDeserializer());
 
-        this.messageDeserializers.put(new Integer(OKCounterReplyMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(OKCounterReplyMessage.MESSAGEID)).add(new OKCounterReplyMessageDeserializer());
+        this.messageDeserializers.put(Integer.valueOf(OKCounterReplyMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(OKCounterReplyMessage.MESSAGEID)).add(new OKCounterReplyMessageDeserializer());
 
-        this.messageDeserializers.put(new Integer(AbstractLastResultsMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
-        this.messageDeserializers.get(new Integer(AbstractLastResultsMessage.MESSAGEID)).add(new LastResultsMessageRev1Deserializer());
+        this.messageDeserializers.put(Integer.valueOf(AbstractLastResultsMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(AbstractLastResultsMessage.MESSAGEID)).add(new LastResultsMessageRev1Deserializer());
     }
 }

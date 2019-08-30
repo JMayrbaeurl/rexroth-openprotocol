@@ -28,7 +28,7 @@ public class ProgramNumbersMessageDeserializer extends ROPMessageDeserializer {
             int number = Integer.parseInt(str.substring(0, 3));
             if (number > 0) {
                 for (int i = 0; i < number; i++) {
-                    reply.getProgramNumbers().add(new Integer(Integer.parseInt(str.substring(3+i*3, 6+i*3))));
+                    reply.getProgramNumbers().add(Integer.valueOf(Integer.parseInt(str.substring(3+i*3, 6+i*3))));
                 }
             }
 
