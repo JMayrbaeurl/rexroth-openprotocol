@@ -63,6 +63,29 @@ public class RexrothOpenProtocolAdapter {
         this.sendMessageAsString(this.messageEncoder.encodeMessage(message));
     }
 
+    public String sendROPRequestMessageString(final String messageString) throws UnknownHostException, IOException {
+
+        String result;
+
+        if (messageString == null || messageString.length() == 0)
+            throw new IllegalArgumentException("Value for parameter 'messageString' must not be NULL or empty");
+
+        if (!this.ready())
+            this.open();
+
+        log.info("Sending string to Nexo device using Open protocol: " + messageString);
+        this.sendMessageAsString(messageString);
+
+        result = this.readNexoResultString();
+
+        if (result != null && result.length() > 0) {
+
+            log.debug("Received message from Nexo using Open protocol: " + result);
+        }
+
+        return result;
+    }
+
     private void sendMessageAsString(String messageString) throws IOException {
 
         log.debug("Sending message string to Nexo device using Open protocol: " + messageString);

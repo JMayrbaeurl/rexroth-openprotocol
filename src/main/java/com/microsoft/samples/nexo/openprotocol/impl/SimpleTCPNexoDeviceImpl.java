@@ -8,6 +8,7 @@ import com.microsoft.samples.nexo.openprotocol.Errors;
 import com.microsoft.samples.nexo.openprotocol.NexoCommException;
 import com.microsoft.samples.nexo.openprotocol.NexoDevice;
 import com.microsoft.samples.nexo.openprotocol.NexoDeviceToolData;
+import com.microsoft.samples.nexo.openprotocol.OpenProtocolCommands;
 import com.microsoft.samples.nexo.openprotocol.Subscriber;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
@@ -24,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * SimpleTCPNexoDeviceImpl
  */
-public class SimpleTCPNexoDeviceImpl implements NexoDevice {
+public class SimpleTCPNexoDeviceImpl implements NexoDevice, OpenProtocolCommands {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleTCPNexoDeviceImpl.class);
 
@@ -327,6 +328,17 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
         }
     }
 
+    @Override
+    public String sendROPCommand(final String commandString) throws NexoCommException {
+       
+        try {
+            return this.protocolAdapter.sendROPRequestMessageString(commandString);
+        } catch (IOException e) {
+            log.error("Can not send command string to Nexo device", e);
+            throw new NexoCommException("Can not send command string to Nexo device", e);
+        }
+    }
+
     public RexrothOpenProtocolAdapter getProtocolAdapter() {
         return protocolAdapter;
     }
@@ -351,6 +363,5 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice {
 
         return result;
     }
-
 
 }

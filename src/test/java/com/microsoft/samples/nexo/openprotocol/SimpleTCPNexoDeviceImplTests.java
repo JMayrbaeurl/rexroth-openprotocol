@@ -126,6 +126,15 @@ public class SimpleTCPNexoDeviceImplTests {
         Assert.assertNotNull(counters);
     }
 
+    @Test
+    public void testSendStartCommandAsString() {
+        NexoDevice device = this.createDeviceClient();
+        OpenProtocolCommands rawCommands = (OpenProtocolCommands)device;
+        String result = rawCommands.sendROPCommand("00200001001000000000");
+        Assert.assertNotNull(result);
+        Assert.assertTrue(result.startsWith("00570002001000000000010000020103"));
+    }
+
     private NexoDevice createDeviceClient() {
         
         return NexoDeviceClientFactory.createDefaultNexoDeviceClient("192.168.1.22", 4545);
