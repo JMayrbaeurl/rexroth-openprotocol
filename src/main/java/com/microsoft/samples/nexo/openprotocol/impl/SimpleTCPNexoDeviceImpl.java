@@ -6,10 +6,10 @@ import java.util.Date;
 
 import com.microsoft.samples.nexo.openprotocol.Errors;
 import com.microsoft.samples.nexo.openprotocol.NexoCommException;
-import com.microsoft.samples.nexo.openprotocol.NexoDevice;
 import com.microsoft.samples.nexo.openprotocol.NexoDeviceToolData;
 import com.microsoft.samples.nexo.openprotocol.OpenProtocolCommands;
 import com.microsoft.samples.nexo.openprotocol.Subscriber;
+import com.microsoft.samples.nexo.openprotocol.TCPBasedNexoDevice;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * SimpleTCPNexoDeviceImpl
  */
-public class SimpleTCPNexoDeviceImpl implements NexoDevice, OpenProtocolCommands {
+public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocolCommands {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleTCPNexoDeviceImpl.class);
 
@@ -179,7 +179,7 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice, OpenProtocolCommands
 
     @Override
     public boolean showOnDisplay(String message, int duration) throws NexoCommException {
-        
+
         return this.doShowOnDisplay(message, duration);
     }
 
@@ -330,7 +330,7 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice, OpenProtocolCommands
 
     @Override
     public String sendROPCommand(final String commandString) throws NexoCommException {
-       
+
         try {
             return this.protocolAdapter.sendROPRequestMessageString(commandString);
         } catch (IOException e) {
@@ -362,6 +362,18 @@ public class SimpleTCPNexoDeviceImpl implements NexoDevice, OpenProtocolCommands
                 this.messageFactory, handler);
 
         return result;
+    }
+
+    @Override
+    public String listeningIPAddress() {
+        
+        return this.protocolAdapter != null ? this.protocolAdapter.getIp() : null;
+    }
+
+    @Override
+    public int listeningPort() {
+        
+        return this.protocolAdapter != null ? this.protocolAdapter.getPort() : -1;
     }
 
 }
