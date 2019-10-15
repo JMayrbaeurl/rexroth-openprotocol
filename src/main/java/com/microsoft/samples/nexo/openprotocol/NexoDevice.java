@@ -16,6 +16,7 @@ public interface NexoDevice {
     public int getBatteryLevel() throws NexoCommException;
     public Date getTime() throws NexoCommException;
     public void setTime(Date newTime) throws NexoCommException;
+    public int getWIFILevel() throws NexoCommException;
 
     public boolean showOnDisplay(String message) throws NexoCommException;
     public boolean showOnDisplay(String message, int duration) throws NexoCommException;

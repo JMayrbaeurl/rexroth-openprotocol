@@ -27,6 +27,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.wifi.WifiLevelRequestMessage;
 
 /**
  * ROPMessageFactory
@@ -51,6 +52,11 @@ public class ROPMessageFactory {
     public BatteryLevelRequestMessage createBatteryLevelRequestMessage() {
         
         return new BatteryLevelRequestMessage();
+    }
+
+    public WifiLevelRequestMessage createWifiLevelRequestMessage() {
+
+        return new WifiLevelRequestMessage();
     }
 
     public ShowOnDisplayRequestMessage createShowOnDisplayRequestMessage(String message, int duration) {

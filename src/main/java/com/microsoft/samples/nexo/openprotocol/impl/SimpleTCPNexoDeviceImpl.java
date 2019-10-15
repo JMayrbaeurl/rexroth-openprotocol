@@ -18,6 +18,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.wifi.WifiLevelMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -236,6 +237,32 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
     }
 
     @Override
+    public int getWIFILevel() throws NexoCommException {
+
+        int result = -1;
+
+        ROPRequestMessage request = this.messageFactory.createWifiLevelRequestMessage();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof WifiLevelMessage) {
+                    result = ((WifiLevelMessage) reply).getWifiLevel();
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                }
+            } else {
+                log.debug("Get WIFI level command didn't get a reply");
+            }
+        } catch (IOException e) {
+            log.error("Exception on getting wifi level from Nexo device", e);
+            throw new NexoCommException("Exception on getting wifi level from Nexo device", e);
+        }
+
+        return result;
+    }
+
+    @Override
     public boolean startCommunication() throws NexoCommException {
 
         boolean result = false;
@@ -366,14 +393,15 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
     @Override
     public String listeningIPAddress() {
-        
+
         return this.protocolAdapter != null ? this.protocolAdapter.getIp() : null;
     }
 
     @Override
     public int listeningPort() {
-        
+
         return this.protocolAdapter != null ? this.protocolAdapter.getPort() : -1;
     }
+
 
 }

@@ -18,6 +18,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.time.TimeRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.wifi.WifiLevelRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageSerializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ShowOnDisplayMessageSerializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.TimeSetMessageSerializer;
@@ -61,6 +62,8 @@ public class ROPMessageEncoder {
 
         this.messageSerializers.put(Integer.valueOf(BatteryLevelRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(Integer.valueOf(BatteryLevelRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(WifiLevelRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(WifiLevelRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
         this.messageSerializers.put(Integer.valueOf(ShowOnDisplayRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(Integer.valueOf(ShowOnDisplayRequestMessage.MESSAGEID)).add(new ShowOnDisplayMessageSerializer());

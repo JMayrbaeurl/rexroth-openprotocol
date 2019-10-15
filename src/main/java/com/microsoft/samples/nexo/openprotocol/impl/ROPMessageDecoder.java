@@ -13,6 +13,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessag
 import com.microsoft.samples.nexo.openprotocol.impl.results.AbstractLastResultsMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.wifi.WifiLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.BatteryLevelMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAcceptedMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAckStartDeserializer;
@@ -23,6 +24,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.wire.ProgramNumbersMessageDe
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.TimeMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ToolDataMessageDeserializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.WifiLevelMessageDeserializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +92,9 @@ public class ROPMessageDecoder {
 
         this.messageDeserializers.put(Integer.valueOf(BatteryLevelMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
         this.messageDeserializers.get(Integer.valueOf(BatteryLevelMessage.MESSAGEID)).add(new BatteryLevelMessageDeserializer());
+
+        this.messageDeserializers.put(Integer.valueOf(WifiLevelMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(WifiLevelMessage.MESSAGEID)).add(new WifiLevelMessageDeserializer());
 
         this.messageDeserializers.put(Integer.valueOf(ProgramNumbersMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
         this.messageDeserializers.get(Integer.valueOf(ProgramNumbersMessage.MESSAGEID)).add(new ProgramNumbersMessageDeserializer());
