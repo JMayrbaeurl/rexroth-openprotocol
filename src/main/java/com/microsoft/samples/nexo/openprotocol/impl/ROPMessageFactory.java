@@ -27,6 +27,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.wifi.WifiLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wifi.WifiLevelRequestMessage;
 
 /**
@@ -160,6 +161,9 @@ public class ROPMessageFactory {
                 break;
             case AbstractLastResultsMessage.MESSAGEID:
                 result = new LastResultsMessageRev1();
+                break;
+            case WifiLevelMessage.MESSAGEID:
+                result = new WifiLevelMessage();
                 break;
             default:
                 break;

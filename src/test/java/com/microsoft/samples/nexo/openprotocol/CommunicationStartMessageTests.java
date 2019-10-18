@@ -3,10 +3,11 @@ package com.microsoft.samples.nexo.openprotocol;
 import com.microsoft.samples.nexo.openprotocol.impl.ROPMessageDecoder;
 import com.microsoft.samples.nexo.openprotocol.impl.ROPMessageEncoder;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartMessage;
-
-import org.junit.Test;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply;
+import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReplyRev1;
 
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * CommunicationStartMessageTests
@@ -26,8 +27,8 @@ public class CommunicationStartMessageTests {
     @Test
     public void testSimpleFromAscii() {
 
-        CommunicationStartMessage msg = new CommunicationStartMessage();
-        msg = (CommunicationStartMessage)decoder.decodeMessage("00200001002000000000", msg);
-        Assert.assertEquals(2, msg.getRevision());
+        CommunicationStartReply msg = new CommunicationStartReplyRev1();
+        msg = (CommunicationStartReply)decoder.decodeMessage("002000020010000000000000000000000000000000000000000000000", msg);
+        Assert.assertEquals(1, msg.getRevision());
     }
 }

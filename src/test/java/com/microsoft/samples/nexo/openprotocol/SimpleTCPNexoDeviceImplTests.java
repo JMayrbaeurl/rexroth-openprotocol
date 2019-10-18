@@ -135,6 +135,14 @@ public class SimpleTCPNexoDeviceImplTests {
         Assert.assertTrue(result.startsWith("00570002001000000000010000020103"));
     }
 
+    @Test
+    public void testGetWIFILevel() {
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        int level = device.getWIFILevel();
+        Assert.assertTrue(level != -1);
+    }
+
     private NexoDevice createDeviceClient() {
         
         return NexoDeviceClientFactory.createDefaultNexoDeviceClient("192.168.1.22", 4545);
