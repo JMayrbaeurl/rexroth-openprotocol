@@ -16,6 +16,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.program.SelectProgramRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.AbstractLastResultsMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsAcknMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsMessageRev1;
@@ -24,6 +25,8 @@ import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubStopMe
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.tool.ActivateRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.tool.DeactivateRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
@@ -111,6 +114,18 @@ public class ROPMessageFactory {
 
     public LastResultsSubStopMessage createLastResultsSubStopMessage() {
         return new LastResultsSubStopMessage();
+    }
+
+    public ActivateRequestMessage createActivateRequestMessage() {
+        return new ActivateRequestMessage();
+    }
+
+    public DeactivateRequestMessage createDeactivateRequestMessage() {
+        return new DeactivateRequestMessage();
+    }
+
+    public SelectProgramRequestMessage createSelectProgramRequestMessage(int programNumber) {
+        return new SelectProgramRequestMessage(programNumber);
     }
 
     public ROPMessage createMessageFor(int msgID, int rev) {

@@ -44,6 +44,8 @@
                 <configuration>
                     <excludes>
                         <exclude>**/SimpleTCPNexoDeviceImplTests.java</exclude>
+                        <exclude>**/ProgramTests.java</exclude>
+                        <exclude>**/ToolTests.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

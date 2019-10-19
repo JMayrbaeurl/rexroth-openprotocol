@@ -14,8 +14,11 @@ import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.program.SelectProgramRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.tool.ActivateRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.tool.DeactivateRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wifi.WifiLevelMessage;
@@ -34,6 +37,9 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
     private ROPMessageFactory messageFactory;
 
+    /**
+     * 
+     */
     @Override
     public NexoDeviceToolData getToolData() throws NexoCommException {
 
@@ -58,6 +64,70 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
         }
 
         return result;
+    }
+
+    /**
+     * 
+     */
+    @Override
+    public boolean activateTool() throws NexoCommException {
+
+        boolean result = false;
+
+        ROPRequestMessage request = this.messageFactory.createActivateRequestMessage();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof CommandAcceptedMessage) {
+                    result = ((CommandAcceptedMessage) reply)
+                            .getAcceptedMessageID() == ActivateRequestMessage.MESSAGEID;
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                }
+            } else {
+                log.debug("Activate Tool command didn't get a reply");
+            }
+        } catch (IOException e) {
+            log.error("Exception on trying to activate tool", e);
+            throw new NexoCommException("Exception on trying to activate tool", e);
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean deactivateTool() throws NexoCommException {
+
+        boolean result = false;
+
+        ROPRequestMessage request = this.messageFactory.createDeactivateRequestMessage();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof CommandAcceptedMessage) {
+                    result = ((CommandAcceptedMessage) reply)
+                            .getAcceptedMessageID() == DeactivateRequestMessage.MESSAGEID;
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                }
+            } else {
+                log.debug("Deactivate Tool command didn't get a reply");
+            }
+        } catch (IOException e) {
+            log.error("Exception on trying to deactivate tool", e);
+            throw new NexoCommException("Exception on trying to deactivate tool", e);
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean isActivated() throws NexoCommException {
+
+        log.error("Unimplemented method 'isActivated' called");
+        throw new NexoCommException("Unimplemented method 'isActivated' called");
     }
 
     @Override
@@ -144,6 +214,39 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
         }
 
         return result;
+    }
+
+    @Override
+    public boolean selectTighteningProgram(int programNumber) throws NexoCommException {
+
+        boolean result = false;
+
+        if (programNumber < 0 || programNumber > 999) {
+            throw new NexoCommException("Tightening program number has to be in the range of 0 to 999");
+        }
+
+        ROPRequestMessage request = this.messageFactory.createSelectProgramRequestMessage(programNumber);
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof CommandAcceptedMessage) {
+                    result = ((CommandAcceptedMessage) reply)
+                            .getAcceptedMessageID() == SelectProgramRequestMessage.MESSAGEID;
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                    else
+                        log.error("Tightning program " + programNumber + " cannot be selected.");
+                }
+            } else {
+                log.debug("Select tightening program command didn't get a reply");
+            }
+        } catch (IOException e) {
+            log.error("Exception on trying to select tightening program " + programNumber, e);
+            throw new NexoCommException("Exception on trying to select tightening program " + programNumber, e);
+        }
+
+        return result;    
     }
 
     @Override
@@ -402,6 +505,5 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         return this.protocolAdapter != null ? this.protocolAdapter.getPort() : -1;
     }
-
 
 }

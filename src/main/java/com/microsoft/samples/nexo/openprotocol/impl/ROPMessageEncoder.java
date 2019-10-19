@@ -11,15 +11,19 @@ import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartMessa
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStopMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.program.SelectProgramRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsAcknMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubStopMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.tool.ActivateRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.tool.DeactivateRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ToolDataRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.vis.ShowOnDisplayRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wifi.WifiLevelRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageSerializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.SelectProgramMessageSerializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ShowOnDisplayMessageSerializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.TimeSetMessageSerializer;
 
@@ -70,6 +74,8 @@ public class ROPMessageEncoder {
 
         this.messageSerializers.put(Integer.valueOf(ProgramNumbersRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(Integer.valueOf(ProgramNumbersRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(SelectProgramRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(SelectProgramRequestMessage.MESSAGEID)).add(new SelectProgramMessageSerializer());
 
         this.messageSerializers.put(Integer.valueOf(TimeRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(Integer.valueOf(TimeRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
@@ -78,6 +84,10 @@ public class ROPMessageEncoder {
 
         this.messageSerializers.put(Integer.valueOf(ToolDataRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(Integer.valueOf(ToolDataRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(ActivateRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(ActivateRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(DeactivateRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(DeactivateRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
         this.messageSerializers.put(Integer.valueOf(OKCounterRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(Integer.valueOf(OKCounterRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());

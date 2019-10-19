@@ -21,9 +21,13 @@ public interface NexoDevice {
     public boolean showOnDisplay(String message) throws NexoCommException;
     public boolean showOnDisplay(String message, int duration) throws NexoCommException;
 
+    public boolean selectTighteningProgram(int programNumber) throws NexoCommException;
     public int[] getTighteningprogramNumbers() throws NexoCommException;
     public int[] getOKCounters() throws NexoCommException;
 
+    public boolean activateTool() throws NexoCommException;
+    public boolean deactivateTool() throws NexoCommException;
+    public boolean isActivated() throws NexoCommException;
     public NexoDeviceToolData getToolData() throws NexoCommException;
 
     public interface ResultsHandler {
