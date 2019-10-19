@@ -81,7 +81,8 @@ public class TighteningResultsSubscriber implements Subscriber, Runnable {
         ROPMessage message = null;
         try {
             message = this.protocolAdapter.readNextMessage();
-            this.protocolAdapter.sendMessage(this.messageFactory.createLastResultsAcknMessage());
+            if (message != null)
+                this.protocolAdapter.sendMessage(this.messageFactory.createLastResultsAcknMessage());
         } catch (IOException e) {
             log.error("Exception on reading next tightening result. ", e);
             running.set(false);

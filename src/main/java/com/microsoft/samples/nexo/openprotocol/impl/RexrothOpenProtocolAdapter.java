@@ -149,7 +149,8 @@ public class RexrothOpenProtocolAdapter {
         char[] buffer = new char[1024];
         int i = inStream.read(buffer, 0, 1024);
 
-        log.debug("Read " + i + " bytes from Nexo device");
+        if (i != -1)
+            log.debug("Read " + i + " bytes from Nexo device");
 
         // Dont read the trailing null ASCII character
         return i != -1 ? new String(buffer, 0, i-1) : "";
