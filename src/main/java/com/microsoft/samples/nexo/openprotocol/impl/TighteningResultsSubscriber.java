@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.microsoft.samples.nexo.openprotocol.Errors;
 import com.microsoft.samples.nexo.openprotocol.NexoCommException;
+import com.microsoft.samples.nexo.openprotocol.NexoDevice;
 import com.microsoft.samples.nexo.openprotocol.Subscriber;
 import com.microsoft.samples.nexo.openprotocol.NexoDevice.ResultsHandler;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsMessageRev1;
@@ -25,18 +26,17 @@ public class TighteningResultsSubscriber implements Subscriber, Runnable {
 
     private ResultsHandler resultsHandler;
 
+    private final NexoDevice device;
+
     private RexrothOpenProtocolAdapter protocolAdapter;
 
     private ROPMessageFactory messageFactory;
-
-    public TighteningResultsSubscriber(int sleepInterval) {
-        interval = sleepInterval;
-    }
     
-    public TighteningResultsSubscriber(int interval, RexrothOpenProtocolAdapter protocolAdapter,
+    public TighteningResultsSubscriber(int interval, NexoDevice nexo, RexrothOpenProtocolAdapter protocolAdapter,
             ROPMessageFactory messageFactory, ResultsHandler handler) {
 
         this.interval = interval;
+        this.device = nexo;
         this.protocolAdapter = protocolAdapter;
         this.messageFactory = messageFactory;
         this.resultsHandler = handler;
@@ -98,8 +98,12 @@ public class TighteningResultsSubscriber implements Subscriber, Runnable {
 
     @Override
     public void startSubscription() {
-        if (this.sendStartSubscriptionMessage())
-            this.start();
+
+        if (this.device.startCommunication()) {
+            if (this.sendStartSubscriptionMessage())
+                this.start();
+        } else
+            log.error("Cannot start subscription, because communication with nexo could not be started");
     }
 
     @Override

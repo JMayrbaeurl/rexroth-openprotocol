@@ -488,7 +488,7 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
     @Override
     public Subscriber subscribeToTighteningResults(ResultsHandler handler) {
 
-        TighteningResultsSubscriber result = new TighteningResultsSubscriber(100, this.protocolAdapter,
+        TighteningResultsSubscriber result = new TighteningResultsSubscriber(100, this, this.protocolAdapter,
                 this.messageFactory, handler);
 
         return result;
