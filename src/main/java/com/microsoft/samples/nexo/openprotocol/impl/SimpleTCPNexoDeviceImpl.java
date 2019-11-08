@@ -8,13 +8,18 @@ import com.microsoft.samples.nexo.openprotocol.Errors;
 import com.microsoft.samples.nexo.openprotocol.NexoCommException;
 import com.microsoft.samples.nexo.openprotocol.NexoDeviceToolData;
 import com.microsoft.samples.nexo.openprotocol.OpenProtocolCommands;
+import com.microsoft.samples.nexo.openprotocol.PLCOutputSignalChange;
 import com.microsoft.samples.nexo.openprotocol.Subscriber;
 import com.microsoft.samples.nexo.openprotocol.TCPBasedNexoDevice;
 import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.plc.OutSignalChangeSubRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.plc.OutputSignalChangeMessageRev2;
+import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramChangeSubRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.SelectProgramRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.tool.ActivateRequestMessage;
@@ -246,7 +251,7 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
             throw new NexoCommException("Exception on trying to select tightening program " + programNumber, e);
         }
 
-        return result;    
+        return result;
     }
 
     @Override
@@ -467,6 +472,112 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
             log.error("Can not send command string to Nexo device", e);
             throw new NexoCommException("Can not send command string to Nexo device", e);
         }
+    }
+
+    @Override
+    public boolean subscribeToTighteningResults() throws NexoCommException {
+
+        boolean result = false;
+
+        log.debug("Now sending last results subscription");
+
+        ROPRequestMessage request = this.messageFactory.createLastResultsSubRequestMessage();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof CommandAcceptedMessage) {
+                    result = ((CommandAcceptedMessage) reply)
+                            .getAcceptedMessageID() == LastResultsSubRequestMessage.MESSAGEID;
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                    else
+                        log.error("Subscription for last results was not possible");
+                }
+            } else {
+                log.debug("Last results subscription command didn't get a reply");
+            }
+        } catch (IOException e) {
+            log.error("Exception on trying to subscribe to last tightening results", e);
+            throw new NexoCommException("Exception on trying to subscribe to last tightening results", e);
+        }
+
+        return result;
+    }
+
+    @Override
+    public PLCOutputSignalChange subscribeToOutputSignalChange() throws NexoCommException {
+
+        PLCOutputSignalChange result = null;
+
+        log.debug("Now sending output signal change subscription");
+
+        boolean couldSubscribe = false;
+        ROPRequestMessage request = this.messageFactory.createOutputSignalChangeSubRequestMessage();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof CommandAcceptedMessage) {
+                    couldSubscribe = ((CommandAcceptedMessage) reply)
+                            .getAcceptedMessageID() == OutSignalChangeSubRequestMessage.MESSAGEID;
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                    else
+                        log.error("Subscription for output signal changes was not possible");
+                }
+            } else {
+                log.debug("Output signal change subscription command didn't get a reply");
+            }
+
+            if (couldSubscribe) {
+                ROPMessage message = this.protocolAdapter.readNextMessage();
+                if (message != null && message instanceof OutputSignalChangeMessageRev2) {
+                    result = ((OutputSignalChangeMessageRev2) message).getChange();
+
+                    // Send acknowledge
+                    this.protocolAdapter.sendMessage(this.messageFactory.createAckOutSignalChangeMessage());
+                }
+            }
+
+        } catch (IOException e) {
+            log.error("Exception on trying to subscribe to output signal changes", e);
+            throw new NexoCommException("Exception on trying to subscribe to output signal changes", e);
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean subscribeToProgramChange() throws NexoCommException {
+        
+        boolean result = false;
+
+        log.debug("Now sending program change subscription");
+
+        ROPRequestMessage request = this.messageFactory.createProgramChangeSubRequestMessage();
+        try {
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof CommandAcceptedMessage) {
+                    result = ((CommandAcceptedMessage) reply)
+                            .getAcceptedMessageID() == ProgramChangeSubRequestMessage.MESSAGEID;
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                    else
+                        log.error("Subscription for program changes was not possible");
+                }
+            } else {
+                log.debug("Program change subscription command didn't get a reply");
+            }
+
+        } catch (IOException e) {
+            log.error("Exception on trying to subscribe to program changes", e);
+            throw new NexoCommException("Exception on trying to subscribe to program changes", e);
+        }
+
+        return result;
     }
 
     public RexrothOpenProtocolAdapter getProtocolAdapter() {

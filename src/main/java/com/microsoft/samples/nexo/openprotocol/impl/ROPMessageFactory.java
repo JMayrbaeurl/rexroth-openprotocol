@@ -14,6 +14,10 @@ import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStopMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.plc.AckOutSignalChangeMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.plc.OutSignalChangeSubRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.plc.OutputSignalChangeMessageRev2;
+import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramChangeSubRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.SelectProgramRequestMessage;
@@ -108,6 +112,14 @@ public class ROPMessageFactory {
         return new LastResultsSubRequestMessage();
     }
 
+    public OutSignalChangeSubRequestMessage createOutputSignalChangeSubRequestMessage() {
+        return new OutSignalChangeSubRequestMessage();
+    }
+
+    public AckOutSignalChangeMessage createAckOutSignalChangeMessage() {
+        return new AckOutSignalChangeMessage();
+    }
+
     public LastResultsAcknMessage createLastResultsAcknMessage() {
         return new LastResultsAcknMessage();
     }
@@ -126,6 +138,10 @@ public class ROPMessageFactory {
 
     public SelectProgramRequestMessage createSelectProgramRequestMessage(int programNumber) {
         return new SelectProgramRequestMessage(programNumber);
+    }
+
+    public ProgramChangeSubRequestMessage createProgramChangeSubRequestMessage() {
+        return new ProgramChangeSubRequestMessage();
     }
 
     public ROPMessage createMessageFor(int msgID, int rev) {
@@ -179,6 +195,9 @@ public class ROPMessageFactory {
                 break;
             case WifiLevelMessage.MESSAGEID:
                 result = new WifiLevelMessage();
+                break;
+            case OutputSignalChangeMessageRev2.MESSAGEID:
+                result = new OutputSignalChangeMessageRev2();
                 break;
             default:
                 break;

@@ -10,6 +10,9 @@ import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveM
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStopMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.plc.AckOutSignalChangeMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.plc.OutSignalChangeSubRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramChangeSubRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.SelectProgramRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsAcknMessage;
@@ -76,6 +79,8 @@ public class ROPMessageEncoder {
         this.messageSerializers.get(Integer.valueOf(ProgramNumbersRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
         this.messageSerializers.put(Integer.valueOf(SelectProgramRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(Integer.valueOf(SelectProgramRequestMessage.MESSAGEID)).add(new SelectProgramMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(ProgramChangeSubRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(ProgramChangeSubRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
 
         this.messageSerializers.put(Integer.valueOf(TimeRequestMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(Integer.valueOf(TimeRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
@@ -98,6 +103,12 @@ public class ROPMessageEncoder {
         this.messageSerializers.get(Integer.valueOf(LastResultsAcknMessage.MESSAGEID)).add(new ROPMessageSerializer());
         this.messageSerializers.put(Integer.valueOf(LastResultsSubStopMessage.MESSAGEID), new ArrayList<>());
         this.messageSerializers.get(Integer.valueOf(LastResultsSubStopMessage.MESSAGEID)).add(new ROPMessageSerializer());
+
+        this.messageSerializers.put(Integer.valueOf(OutSignalChangeSubRequestMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(OutSignalChangeSubRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.get(Integer.valueOf(OutSignalChangeSubRequestMessage.MESSAGEID)).add(new ROPMessageSerializer());
+        this.messageSerializers.put(Integer.valueOf(AckOutSignalChangeMessage.MESSAGEID), new ArrayList<>());
+        this.messageSerializers.get(Integer.valueOf(AckOutSignalChangeMessage.MESSAGEID)).add(new ROPMessageSerializer());
     }
 
     public Map<Integer, List<ROPMessageSerializer>> getMessageSerializers() {

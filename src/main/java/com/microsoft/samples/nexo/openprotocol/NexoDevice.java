@@ -24,6 +24,7 @@ public interface NexoDevice {
     public boolean selectTighteningProgram(int programNumber) throws NexoCommException;
     public int[] getTighteningprogramNumbers() throws NexoCommException;
     public int[] getOKCounters() throws NexoCommException;
+    public boolean subscribeToProgramChange() throws NexoCommException;
 
     public boolean activateTool() throws NexoCommException;
     public boolean deactivateTool() throws NexoCommException;
@@ -35,5 +36,8 @@ public interface NexoDevice {
         public void handleResult(TighteningResults result);
     }
 
+    public boolean subscribeToTighteningResults() throws NexoCommException;
     public Subscriber subscribeToTighteningResults(ResultsHandler handler);
+
+    public PLCOutputSignalChange subscribeToOutputSignalChange() throws NexoCommException;
 }

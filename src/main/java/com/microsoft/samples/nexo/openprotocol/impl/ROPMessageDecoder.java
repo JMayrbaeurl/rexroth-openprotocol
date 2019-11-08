@@ -9,6 +9,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.batt.BatteryLevelMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationKeepAliveReply;
 import com.microsoft.samples.nexo.openprotocol.impl.comm.CommunicationStartReply;
 import com.microsoft.samples.nexo.openprotocol.impl.job.OKCounterReplyMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.plc.OutputSignalChangeMessageRev2;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.AbstractLastResultsMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
@@ -20,6 +21,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandAckStartDeserial
 import com.microsoft.samples.nexo.openprotocol.impl.wire.CommandErrorMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.LastResultsMessageRev1Deserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.OKCounterReplyMessageDeserializer;
+import com.microsoft.samples.nexo.openprotocol.impl.wire.OutputSignalChangeMessageRev2Deserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ProgramNumbersMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.ROPMessageDeserializer;
 import com.microsoft.samples.nexo.openprotocol.impl.wire.TimeMessageDeserializer;
@@ -110,5 +112,9 @@ public class ROPMessageDecoder {
 
         this.messageDeserializers.put(Integer.valueOf(AbstractLastResultsMessage.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
         this.messageDeserializers.get(Integer.valueOf(AbstractLastResultsMessage.MESSAGEID)).add(new LastResultsMessageRev1Deserializer());
+
+        this.messageDeserializers.put(Integer.valueOf(OutputSignalChangeMessageRev2.MESSAGEID), new ArrayList<ROPMessageDeserializer>());
+        this.messageDeserializers.get(Integer.valueOf(OutputSignalChangeMessageRev2.MESSAGEID)).add(null);
+        this.messageDeserializers.get(Integer.valueOf(OutputSignalChangeMessageRev2.MESSAGEID)).add(new OutputSignalChangeMessageRev2Deserializer());
     }
 }

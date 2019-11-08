@@ -129,4 +129,21 @@ public class SimpleTCPNexoDeviceImplTests extends AbstractNexoTests {
         Assert.assertTrue(level != -1);
     }
 
+    @Test
+    public void testGetLockState() {
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        Assert.assertTrue(device.subscribeToTighteningResults());
+        PLCOutputSignalChange signals = device.subscribeToOutputSignalChange();
+        Assert.assertNotNull(signals);
+        Assert.assertTrue(signals.numberOfSignals() == 16);
+        //Assert.assertTrue(signals.isSignalSet(3));
+    }
+
+    @Test
+    public void testProgramChangeSubscription() {
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        device.subscribeToProgramChange();
+    }
 }
