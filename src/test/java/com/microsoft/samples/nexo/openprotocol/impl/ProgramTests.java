@@ -41,4 +41,16 @@ public class ProgramTests extends AbstractNexoTests {
         }
         Assert.assertTrue(allOK);
     }
+
+    @Test
+    public void testReconnect() throws InterruptedException {
+
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+
+        Thread.sleep(1000*30);
+
+        int[] numbers = device.getTighteningprogramNumbers();
+        Assert.assertTrue(numbers.length > 0);
+    }
 }

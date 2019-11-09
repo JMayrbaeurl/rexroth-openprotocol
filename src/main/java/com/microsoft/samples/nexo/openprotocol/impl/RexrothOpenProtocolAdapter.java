@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 import com.microsoft.samples.nexo.openprotocol.NexoCommException;
 
@@ -29,6 +31,8 @@ public class RexrothOpenProtocolAdapter {
 
     private String ip;
     private int port;
+
+    private Date lastSentMessageTime = new Date();
 
     public RexrothOpenProtocolAdapter() {
         super();
@@ -89,8 +93,30 @@ public class RexrothOpenProtocolAdapter {
     private void sendMessageAsString(String messageString) throws IOException {
 
         log.debug("Sending message string to Nexo device using Open protocol: " + messageString);
-        this.outStream.write(messageString.getBytes(StandardCharsets.US_ASCII));
-        this.outStream.write(0);
+
+        try {
+            this.outStream.write(messageString.getBytes(StandardCharsets.US_ASCII));
+            this.outStream.write(0);
+        } catch (SocketException ex) {
+            log.error("Retrying to establish connection to nexo device since it's lost. " + ex.getMessage());
+            
+            this.reestablishCommunication(true);
+
+            this.outStream.write(messageString.getBytes(StandardCharsets.US_ASCII));
+            this.outStream.write(0);
+        }
+
+        this.lastSentMessageTime = new Date();
+    }
+
+    public void reestablishCommunication(boolean sendStartCommunicationMessage) throws IOException {
+
+        // Reopen socket connection
+        this.open();
+
+        // Send start communication
+        if (sendStartCommunicationMessage)
+            this.sendROPRequestMessage(this.messageFactory.createStartCommunicationRequest());
     }
 
     protected ROPReplyMessage readReplyMessage(ROPRequestMessage requestMessage) throws IOException {
@@ -151,6 +177,8 @@ public class RexrothOpenProtocolAdapter {
 
         if (i != -1)
             log.debug("Read " + i + " bytes from Nexo device");
+        else
+            log.debug("Could not read any bytes from Nexo device");
 
         // Dont read the trailing null ASCII character
         return i != -1 ? new String(buffer, 0, i-1) : "";
@@ -251,5 +279,9 @@ public class RexrothOpenProtocolAdapter {
 
     public void setMessageDecoder(ROPMessageDecoder messageDecoder) {
         this.messageDecoder = messageDecoder;
+    }
+
+    public Date getLastSentMessageTime() {
+        return lastSentMessageTime;
     }
 }

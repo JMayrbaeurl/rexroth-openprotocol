@@ -9,6 +9,9 @@ public interface NexoDevice {
 
     public static final int DEFAULT_PORT = 4545;
 
+    public boolean openSession();
+    public void closeSession();
+
     public boolean startCommunication() throws NexoCommException;
     public void stopCommunication() throws NexoCommException;
     public void sendKeepAlive() throws NexoCommException;

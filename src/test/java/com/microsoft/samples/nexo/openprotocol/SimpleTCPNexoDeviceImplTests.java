@@ -33,6 +33,15 @@ public class SimpleTCPNexoDeviceImplTests extends AbstractNexoTests {
     }
 
     @Test
+    public void testStartStopStartSequence() {
+
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        device.stopCommunication();
+        Assert.assertTrue(device.startCommunication());
+    }
+
+    @Test
     public void testStartCommunicationMultipleTimes() {
 
         NexoDevice device = this.createDeviceClient();

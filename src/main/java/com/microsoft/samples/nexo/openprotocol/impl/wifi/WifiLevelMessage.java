@@ -24,4 +24,9 @@ public class WifiLevelMessage extends AbstractROPReplyMessage {
     public void setWifiLevel(int wifiLevel) {
         this.wifiLevel = wifiLevel;
     }
+
+    @Override
+    public String toString() {
+        return "WifiLevelMessage [wifiLevel=" + wifiLevel + "]";
+    }
 }

@@ -3,6 +3,8 @@ package com.microsoft.samples.nexo.openprotocol.impl;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.microsoft.samples.nexo.openprotocol.Errors;
 import com.microsoft.samples.nexo.openprotocol.NexoCommException;
@@ -42,6 +44,29 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
     private ROPMessageFactory messageFactory;
 
+    private long restartDurationInMilliseconds = 12000;
+
+    private ReentrantLock sessionLock = new ReentrantLock();
+
+    @Override
+    public void closeSession() {
+        this.sessionLock.unlock();
+
+        log.info("Stopped communication session with nexo device");
+    }
+
+    @Override
+    public boolean openSession() {
+
+        log.info("Starting communication session with nexo device");
+
+        try {
+            return this.sessionLock.tryLock(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            return false;
+        }
+    }
+
     /**
      * 
      */
@@ -50,8 +75,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         NexoDeviceToolData result = null;
 
-        ROPRequestMessage request = this.messageFactory.createToolDataRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createToolDataRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof ToolDataMessage) {
@@ -79,8 +106,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         boolean result = false;
 
-        ROPRequestMessage request = this.messageFactory.createActivateRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createActivateRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
@@ -106,8 +135,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         boolean result = false;
 
-        ROPRequestMessage request = this.messageFactory.createDeactivateRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createDeactivateRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
@@ -140,8 +171,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         Date result = null;
 
-        ROPRequestMessage request = this.messageFactory.createTimeRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createTimeRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof TimeMessage) {
@@ -169,8 +202,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
         if (newTime == null)
             throw new IllegalArgumentException("Parameter for new time of Nexo device must not be null");
 
-        ROPRequestMessage request = this.messageFactory.createTimeSetMessage(newTime);
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createTimeSetMessage(newTime);
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
@@ -200,8 +235,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         int[] result = null;
 
-        ROPRequestMessage request = this.messageFactory.createProgramNumbersRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createProgramNumbersRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof ProgramNumbersMessage) {
@@ -230,8 +267,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
             throw new NexoCommException("Tightening program number has to be in the range of 0 to 999");
         }
 
-        ROPRequestMessage request = this.messageFactory.createSelectProgramRequestMessage(programNumber);
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createSelectProgramRequestMessage(programNumber);
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
@@ -259,8 +298,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         int[] result = null;
 
-        ROPRequestMessage request = this.messageFactory.createOKCountersRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createOKCountersRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof OKCounterReplyMessage) {
@@ -296,8 +337,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         boolean result = false;
 
-        ROPRequestMessage request = this.messageFactory.createShowOnDisplayRequestMessage(message, duration);
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createShowOnDisplayRequestMessage(message, duration);
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
@@ -323,8 +366,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         int result = -1;
 
-        ROPRequestMessage request = this.messageFactory.createBatteryLevelRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createBatteryLevelRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof BatteryLevelMessage) {
@@ -349,8 +394,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         int result = -1;
 
-        ROPRequestMessage request = this.messageFactory.createWifiLevelRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createWifiLevelRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof WifiLevelMessage) {
@@ -377,8 +424,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         log.debug("Now send start communication command to Nexo device");
 
-        ROPRequestMessage request = this.messageFactory.createStartCommunicationRequest();
         try {
+            this.prepareForCommunicationStart();
+
+            ROPRequestMessage request = this.messageFactory.createStartCommunicationRequest();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply.isOK())
@@ -417,8 +466,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         log.debug("Now send stop communication command to Nexo device");
 
-        ROPRequestMessage request = this.messageFactory.createStopCommunicationRequest();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createStopCommunicationRequest();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 result = reply.isOK();
@@ -445,8 +496,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         log.debug("Now send keep alive command to Nexo device");
 
-        ROPRequestMessage request = this.messageFactory.createCommunicationKeepAliveMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createCommunicationKeepAliveMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommunicationKeepAliveReply)
@@ -461,6 +514,28 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
             log.error("Can not keep communication with NexoDevice alive", e);
             throw new NexoCommException("Can not keep communication with NexoDevice alive", e);
         }
+    }
+
+    private void prepareForMessageSending() throws IOException {
+
+        if (this.needsCommunicationRestart()) {
+            this.protocolAdapter.reestablishCommunication(true);
+        }
+    }
+
+    private void prepareForCommunicationStart() throws IOException {
+
+        if (this.needsCommunicationRestart()) {
+            this.protocolAdapter.reestablishCommunication(false);
+        }
+    }
+
+    private boolean needsCommunicationRestart() {
+
+        Date now = new Date();
+        Date lastPlusTimeout = new Date(
+                this.protocolAdapter.getLastSentMessageTime().getTime() + this.restartDurationInMilliseconds);
+        return now.after(lastPlusTimeout);
     }
 
     @Override
@@ -481,8 +556,10 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         log.debug("Now sending last results subscription");
 
-        ROPRequestMessage request = this.messageFactory.createLastResultsSubRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createLastResultsSubRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
@@ -513,8 +590,11 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
         log.debug("Now sending output signal change subscription");
 
         boolean couldSubscribe = false;
-        ROPRequestMessage request = this.messageFactory.createOutputSignalChangeSubRequestMessage();
+
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createOutputSignalChangeSubRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
@@ -550,13 +630,15 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
     @Override
     public boolean subscribeToProgramChange() throws NexoCommException {
-        
+
         boolean result = false;
 
         log.debug("Now sending program change subscription");
 
-        ROPRequestMessage request = this.messageFactory.createProgramChangeSubRequestMessage();
         try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createProgramChangeSubRequestMessage();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
                 if (reply instanceof CommandAcceptedMessage) {
@@ -616,5 +698,14 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         return this.protocolAdapter != null ? this.protocolAdapter.getPort() : -1;
     }
+
+    public long getRestartDurationInMilliseconds() {
+        return restartDurationInMilliseconds;
+    }
+
+    public void setRestartDurationInMilliseconds(long restartDurationInMilliseconds) {
+        this.restartDurationInMilliseconds = restartDurationInMilliseconds;
+    }
+
 
 }
