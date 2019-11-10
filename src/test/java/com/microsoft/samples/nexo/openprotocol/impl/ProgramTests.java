@@ -28,6 +28,15 @@ public class ProgramTests extends AbstractNexoTests {
     }
 
     @Test
+    public void testSelectFirstProgram() {
+        NexoDevice device = this.createDeviceClient();
+        Assert.assertTrue(device.startCommunication());
+        int[] numbers = device.getTighteningprogramNumbers();
+        Assert.assertTrue(numbers.length > 0);
+        Assert.assertTrue(device.selectTighteningProgram(numbers[0]));
+    }
+
+    @Test
     public void testSelectAllPrograms() {
         NexoDevice device = this.createDeviceClient();
         Assert.assertTrue(device.startCommunication());
