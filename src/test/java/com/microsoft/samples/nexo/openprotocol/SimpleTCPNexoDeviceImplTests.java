@@ -147,6 +147,7 @@ public class SimpleTCPNexoDeviceImplTests extends AbstractNexoTests {
         Assert.assertNotNull(signals);
         Assert.assertTrue(signals.numberOfSignals() == 16);
         //Assert.assertTrue(signals.isSignalSet(3));
+        Assert.assertTrue(device.unsubscribeFromTighteningResults());
     }
 
     @Test

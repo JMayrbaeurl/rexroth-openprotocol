@@ -23,6 +23,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersReques
 import com.microsoft.samples.nexo.openprotocol.impl.program.SelectProgramRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.AbstractLastResultsMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsAcknMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsCancelRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsMessageRev1;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubStopMessage;
@@ -110,6 +111,10 @@ public class ROPMessageFactory {
 
     public LastResultsSubRequestMessage createLastResultsSubRequestMessage() {
         return new LastResultsSubRequestMessage();
+    }
+
+    public LastResultsCancelRequestMessage createLastResultsCancelRequestMessage() {
+        return new LastResultsCancelRequestMessage();
     }
 
     public OutSignalChangeSubRequestMessage createOutputSignalChangeSubRequestMessage() {

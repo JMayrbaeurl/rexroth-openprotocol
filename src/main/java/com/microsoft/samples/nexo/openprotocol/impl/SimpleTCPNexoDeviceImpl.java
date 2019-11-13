@@ -21,6 +21,7 @@ import com.microsoft.samples.nexo.openprotocol.impl.plc.OutputSignalChangeMessag
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramChangeSubRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.ProgramNumbersMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.program.SelectProgramRequestMessage;
+import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsCancelRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.results.LastResultsSubRequestMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeMessage;
 import com.microsoft.samples.nexo.openprotocol.impl.time.TimeSetMessage;
@@ -430,9 +431,12 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
             ROPRequestMessage request = this.messageFactory.createStartCommunicationRequest();
             ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
             if (reply != null) {
-                if (reply.isOK())
+                if (reply.isOK()) {
                     result = true;
-                else {
+                    if (!(reply instanceof CommandAcceptedMessage)) {
+                        this.handleUnexpectedReplyMessage(request, reply);
+                    }
+                } else {
                     if (reply instanceof CommandErrorMessage) {
                         result = ((CommandErrorMessage) reply).getErrorNumber() == Errors.CLIENTALREADYCONNECTED;
                     }
@@ -457,6 +461,21 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
         }
 
         return result;
+    }
+
+    /**
+     * 
+     * @param request
+     * @param reply
+     */
+    private void handleUnexpectedReplyMessage(ROPRequestMessage request, ROPReplyMessage reply) throws IOException {
+
+        log.warn("Nexo command '" + request + "' returned unexpected reply '" + reply + "'");
+
+        if (reply instanceof OutputSignalChangeMessageRev2) {
+            // Send acknowledge
+            this.protocolAdapter.sendMessage(this.messageFactory.createAckOutSignalChangeMessage());
+        }
     }
 
     @Override
@@ -581,6 +600,41 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
 
         return result;
     }
+    
+    
+    @Override
+    public boolean unsubscribeFromTighteningResults() throws NexoCommException {
+
+        boolean result = false;
+
+        log.debug("Now sending last results remove from subscription");
+
+        try {
+            this.prepareForMessageSending();
+
+            ROPRequestMessage request = this.messageFactory.createLastResultsCancelRequestMessage();
+            ROPReplyMessage reply = this.protocolAdapter.sendROPRequestMessage(request);
+            if (reply != null) {
+                if (reply instanceof CommandAcceptedMessage) {
+                    result = ((CommandAcceptedMessage) reply)
+                            .getAcceptedMessageID() == LastResultsCancelRequestMessage.MESSAGEID;
+                } else {
+                    if (!reply.isError())
+                        throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
+                    else
+                        log.error("Unscribing from last results was not possible");
+                }
+            } else {
+                log.debug("Unscribe from last results command didn't get a reply");
+            }
+        } catch (IOException e) {
+            log.error("Exception on trying to unsubscribe from last tightening results", e);
+            throw new NexoCommException("Exception on trying to unsubscribe from last tightening results", e);
+        }
+
+        return result;
+    }
+
 
     @Override
     public PLCOutputSignalChange subscribeToOutputSignalChange() throws NexoCommException {
@@ -603,8 +657,12 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
                 } else {
                     if (!reply.isError())
                         throw new NexoCommException("Unknown reply message received: " + reply.getClass().toString());
-                    else
-                        log.error("Subscription for output signal changes was not possible");
+                    else {
+                        if (((CommandErrorMessage) reply).getErrorNumber() != Errors.ACTIVATIONFOROUTPUTSIGNALCHANGEALREADYAVAILABLE)
+                            log.error("Subscription for output signal changes was not possible");
+                        else
+                            couldSubscribe = true;
+                    }
                 }
             } else {
                 log.debug("Output signal change subscription command didn't get a reply");
@@ -706,6 +764,5 @@ public class SimpleTCPNexoDeviceImpl implements TCPBasedNexoDevice, OpenProtocol
     public void setRestartDurationInMilliseconds(long restartDurationInMilliseconds) {
         this.restartDurationInMilliseconds = restartDurationInMilliseconds;
     }
-
 
 }

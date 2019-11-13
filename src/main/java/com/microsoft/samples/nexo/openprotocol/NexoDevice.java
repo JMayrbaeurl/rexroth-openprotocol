@@ -40,6 +40,7 @@ public interface NexoDevice {
     }
 
     public boolean subscribeToTighteningResults() throws NexoCommException;
+    public boolean unsubscribeFromTighteningResults() throws NexoCommException;
     public Subscriber subscribeToTighteningResults(ResultsHandler handler);
 
     public PLCOutputSignalChange subscribeToOutputSignalChange() throws NexoCommException;
