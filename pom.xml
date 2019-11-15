@@ -3,7 +3,7 @@
 
     <groupId>com.microsoft.samples.nexo</groupId>
     <artifactId>nexoopenprotocol</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -44,6 +44,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/SimpleTCPNexoDeviceImplTests.java</exclude>
+                        <exclude>**/CommunicationStartMessageTests.java</exclude>
                         <exclude>**/ProgramTests.java</exclude>
                         <exclude>**/ToolTests.java</exclude>
                         <exclude>**/LastResultsSubscriptionTests.java</exclude>
