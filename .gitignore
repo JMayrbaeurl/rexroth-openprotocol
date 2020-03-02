@@ -25,3 +25,5 @@ buildNumber.properties
 .classpath
 .project
 .vscode/
+.sts4-cache/
+.factorypath
